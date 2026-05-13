@@ -153,8 +153,8 @@ const Calendar = () => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(43_95%_78%/0.15),transparent_55%)]" />
           <div className="relative z-10">
             <CalendarDays className="h-10 w-10 mx-auto text-gold mb-4" />
-            <h3 className="font-display text-3xl mb-2">{t("cal.cta.title")}</h3>
-            <p className="opacity-90 max-w-xl mx-auto">{t("cal.cta.sub")}</p>
+            <h3 className="font-display text-3xl mb-2 font-bold">{t("cal.cta.title")}</h3>
+            <p className="opacity-90 max-w-xl mx-auto text-lg">{t("cal.cta.sub")}</p>
           </div>
         </div>
       </section>
