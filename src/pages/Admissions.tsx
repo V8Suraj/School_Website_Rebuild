@@ -580,7 +580,7 @@ const Admissions = () => {
                                 errors.grade ? "border-destructive" : validFields.grade ? "border-emerald-400" : "border-input"
                               }`}
                             >
-                              <option value="">{t("admissions.formGradePlaceholder")}</option>
+                              <option value="" disabled>Select Class (e.g. Class VI)</option>
                               <option value="Pre-K">Pre-K (Nursery)</option>
                               <option value="LKG">LKG</option>
                               <option value="UKG">UKG</option>
