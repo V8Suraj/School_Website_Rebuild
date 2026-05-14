@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { MandalaBg } from "@/components/MandalaBg";
 import { Home, ArrowLeft, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 const NotFound = () => {
   const location = useLocation();

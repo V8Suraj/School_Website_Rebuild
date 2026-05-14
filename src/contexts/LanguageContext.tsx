@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
+
 export type Language = "en" | "hi";
 
 // ─── all translation keys ──────────────────────────────────────────────────────
-type TranslationKey =
+export type TranslationKey  =
   // nav
   | "nav.home" | "nav.about" | "nav.academics" | "nav.admissions"
   | "nav.calendar" | "nav.notices" | "nav.fees" | "nav.contact"

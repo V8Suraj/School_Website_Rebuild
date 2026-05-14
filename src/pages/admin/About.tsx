@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Menu, X, LayoutDashboard } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";

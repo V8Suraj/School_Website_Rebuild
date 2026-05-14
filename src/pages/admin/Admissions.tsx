@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import {

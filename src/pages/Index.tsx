@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { PageHero } from "@/components/PageHero";
 import { SectionHeader } from "@/components/SectionHeader";
 import { MandalaBg } from "@/components/MandalaBg";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   BookOpen, FlaskConical, Palette, Trophy, Award, Sparkles, ArrowRight,

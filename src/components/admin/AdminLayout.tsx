@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { Menu, GraduationCap } from "lucide-react";
 import { AdminSidebar } from "./AdminSidebar";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 const isAuthenticated = () => localStorage.getItem("admin-auth") === "true";
 

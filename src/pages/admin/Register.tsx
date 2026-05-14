@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GraduationCap, Eye, EyeOff, ArrowLeft, CheckCircle2, Flame, Lock, Mail, User, Key } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ADMIN_SECRET_KEY, isAdminRegistered, saveAdminCredentials } from "@/lib/adminAuth";

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 
 interface AdminPageShellProps {

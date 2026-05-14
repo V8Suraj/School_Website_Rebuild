@@ -4,7 +4,7 @@ import { AdminPageShell } from "@/components/admin/AdminPageShell";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { Printer, RefreshCw, FileText, ChevronDown, Globe, Languages, Loader2 } from "lucide-react";
 import { translateFields } from "@/lib/translate";
