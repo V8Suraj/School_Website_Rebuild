@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { PageHero } from "@/components/PageHero";
@@ -15,10 +15,10 @@ import heroAcademics from "@/assets/acdemics.png";
 /* ─── Static colour/icon config (language-independent) ─── */
 
 const statsMeta = [
-  { key: "statsPassRate" as const, value: "98%", icon: Star, color: "from-amber-500 to-orange-500" },
-  { key: "statsUniversity" as const, value: "150+", icon: GraduationCap, color: "from-primary to-orange-400" },
-  { key: "statsExperts" as const, value: "40+", icon: Users, color: "from-amber-600 to-primary" },
-  { key: "statsOlympiad" as const, value: "25+", icon: Trophy, color: "from-gold to-amber-400" },
+  { key: "statsPassRate" as const, value: 98, icon: Star, color: "from-amber-500 to-orange-500" },
+  { key: "statsUniversity" as const, value: 150, icon: GraduationCap, color: "from-primary to-orange-400" },
+  { key: "statsExperts" as const, value: 40, icon: Users, color: "from-amber-600 to-primary" },
+  { key: "statsOlympiad" as const, value: 25, icon: Trophy, color: "from-gold to-amber-400" },
 ] as const;
 
 const programsMeta = [
@@ -84,13 +84,46 @@ const subjectsMeta = [
   { icon: Dumbbell,    color: "from-gold to-amber-500",        ritual: "🧘", sanskritName: "शारीरिक शिक्षा", ritualLabel: "Sharir Dharma" },
 ] as const;
 
-/* ─── Animated number ───────────────────────────────────── */
-const AnimatedNumber = ({ value }: { value: string }) => {
+/* ─── Animated number component with counter animation ─── */
+const AnimatedNumber = ({ value }: { value: number }) => {
+  const [displayValue, setDisplayValue] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.8 });
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (isInView && !hasAnimated) {
+      setHasAnimated(true);
+      
+      const startTime = performance.now();
+      const startValue = 0;
+      const endValue = value;
+      const duration = 2000;
+      
+      const easingFn = (t: number) => t * (2 - t); // easeOutQuad
+      
+      const animate = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        
+        if (elapsed >= duration) {
+          setDisplayValue(endValue);
+          return;
+        }
+        
+        const progress = easingFn(Math.min(1, elapsed / duration));
+        const currentValue = Math.floor(startValue + (endValue - startValue) * progress);
+        setDisplayValue(currentValue);
+        
+        requestAnimationFrame(animate);
+      };
+      
+      requestAnimationFrame(animate);
+    }
+  }, [isInView, value, hasAnimated]);
+
   return (
-    <span ref={ref} className={`transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-      {value}
+    <span ref={ref} className="transition-all duration-700">
+      {displayValue.toLocaleString()}
     </span>
   );
 };
@@ -145,6 +178,8 @@ const Academics = () => {
     ][i] as Parameters<typeof t>[0]),
   }));
 
+  
+
   return (
     <>
       <PageHero
@@ -156,162 +191,168 @@ const Academics = () => {
       />
 
       {/* ── Stats Bar ── */}
-      <section className="container-narrow mt-10 md:mt-14 relative z-10">
-        <div className="rounded-3xl border border-gold/30 bg-card shadow-temple overflow-hidden ornate-frame">
-          <div className="h-1.5 w-full bg-gradient-festive" />
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gold/15">
-            {statsMeta.map((s, i) => (
-              <motion.div
-                key={s.key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="relative group flex flex-col items-center justify-center gap-2 p-6 md:p-8 text-center overflow-hidden cursor-default transition-all duration-300 hover:bg-[hsl(38_55%_97%)]"
-              >
-                {/* Warm gradient wash on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-[0.07] transition-opacity duration-300`} />
-                {/* Bottom accent line slides in */}
-                <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${s.color} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center`} />
-                <div className="relative">
-                  <div className={`relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-gold group-hover:scale-110 group-hover:shadow-[0_4px_16px_hsl(43_78%_52%/0.3)] transition-all duration-300`}>
-                    <s.icon className="h-5 w-5" />
-                  </div>
-                </div>
-                <div className="font-display text-3xl md:text-4xl font-bold text-gradient-saffron leading-none">
-                  <AnimatedNumber value={s.value} />
-                </div>
-                <div className="text-xs text-muted-foreground leading-snug max-w-[8rem]">{t(`academics.${s.key}`)}</div>
-              </motion.div>
-            ))}
+<section className="container-narrow mt-10 md:mt-14 relative z-10">
+  <div className="rounded-3xl border border-gold/30 bg-card shadow-temple overflow-hidden ornate-frame">
+    <div className="h-1.5 w-full bg-gradient-festive" />
+    <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gold/15">
+      {statsMeta.map((s, i) => (
+        <motion.div
+          key={s.key}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.1, duration: 0.5 }}
+          className="relative group flex flex-col items-center justify-center gap-2 p-6 md:p-8 text-center overflow-hidden cursor-default transition-all duration-300 hover:bg-[hsl(38_55%_97%)]"
+        >
+          {/* Warm gradient wash on hover */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-[0.07] transition-opacity duration-300`} />
+          {/* Bottom accent line slides in */}
+          <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${s.color} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center`} />
+          <div className="relative">
+            <div className={`relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-gold group-hover:scale-110 group-hover:shadow-[0_4px_16px_hsl(43_78%_52%/0.3)] transition-all duration-300`}>
+              <s.icon className="h-5 w-5" />
+            </div>
           </div>
-        </div>
-      </section>
+          <div className="font-display text-3xl md:text-4xl font-bold text-gradient-saffron leading-none">
+            <AnimatedNumber value={s.value} />
+          </div>
+          <div className="text-xs text-muted-foreground leading-snug max-w-[8rem]">{t(`academics.${s.key}`)}</div>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ── Four Pillars ── */}
-      <section className="relative py-24 overflow-hidden">
-        {/* Light warm background */}
-        <div className="absolute inset-0 bg-[hsl(38_55%_95%)]" />
-        {/* Saffron radial bloom */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-[hsl(22_88%_52%/0.08)] blur-[100px] pointer-events-none" />
-        {/* Faint dot texture */}
-        <div className="absolute inset-0 opacity-[0.045]"
-          style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
-        {/* Gold rules */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+<section className="relative py-10 overflow-hidden">
+  {/* Light warm background */}
+  <div className="absolute inset-0 bg-[hsl(38_55%_95%)]" />
+  {/* Saffron radial bloom */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-[hsl(22_88%_52%/0.08)] blur-[100px] pointer-events-none" />
+  {/* Faint dot texture */}
+  <div className="absolute inset-0 opacity-[0.045]"
+    style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
+  {/* Gold rules */}
+  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
+  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
 
-        <div className="container-narrow relative z-10">
+  <div className="container-narrow relative z-10">
 
-          {/* Header */}
+    {/* Header */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-16"
+    >
+      <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sanskrit text-xs tracking-[0.22em] text-primary mb-5">
+        {t("academics.pillarsEyebrow")}
+      </span>
+      <h2 className="font-display text-3xl md:text-5xl font-bold text-secondary leading-tight">
+        {t("academics.pillarsTitle")}
+      </h2>
+      <div className="mt-5 flex items-center justify-center gap-3">
+        <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold/60" />
+        <span className="text-primary text-base">✦</span>
+        <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold/60" />
+      </div>
+      <p className="mt-5 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+        {t("academics.pillarsSubtitle")}
+      </p>
+    </motion.div>
+
+    {/* Cards grid */}
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {pillars.map((p, i) => {
+        const m = pillarsMeta[i];
+        return (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            key={i}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            transition={{ delay: i * 0.13, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            className={`group relative flex flex-col overflow-hidden rounded-3xl border ${m.borderClass} bg-white shadow-[0_4px_24px_hsl(43_78%_52%/0.10)] hover:shadow-[0_16px_48px_hsl(43_78%_52%/0.24)] hover:-translate-y-2 transition-all duration-300`}
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sanskrit text-xs tracking-[0.22em] text-primary mb-5">
-              {t("academics.pillarsEyebrow")}
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl font-bold text-secondary leading-tight">
-              {t("academics.pillarsTitle")}
-            </h2>
-            <div className="mt-5 flex items-center justify-center gap-3">
-              <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold/60" />
-              <span className="text-primary text-base">✦</span>
-              <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold/60" />
-            </div>
-            <p className="mt-5 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              {t("academics.pillarsSubtitle")}
-            </p>
-          </motion.div>
+            {/* Accent top bar — thickens on hover */}
+            <div className={`h-1 w-full shrink-0 bg-gradient-to-r ${m.barClass} transition-all duration-300 group-hover:h-[5px]`} />
 
-          {/* Cards grid */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {pillars.map((p, i) => {
-              const m = pillarsMeta[i];
-              return (
+            {/* Warm wash overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-b ${m.glowClass} to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
+
+            {/* Bottom accent line slides in on hover */}
+            <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.barClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+
+            <div className="relative z-10 flex flex-col flex-1 p-7">
+
+              {/* Top row: tag + devanagari numeral */}
+              <div className="flex items-center justify-between mb-5">
+                <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-bold tracking-[0.16em] uppercase ${m.tagClass}`}>
+                  {m.tag}
+                </span>
+                <span className={`font-sanskrit text-5xl font-bold leading-none select-none opacity-15 group-hover:opacity-30 transition-opacity duration-300 ${m.accentClass}`}>
+                  {m.devanagari}
+                </span>
+              </div>
+
+              {/* Icon with glow ring */}
+              <div className="relative mb-6 w-fit">
+                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${m.barClass} opacity-20 blur-md scale-110`} />
+                {/* Glow ring expands on hover */}
+                <div className={`absolute -inset-1 rounded-2xl bg-gradient-to-br ${m.barClass} opacity-0 group-hover:opacity-20 blur-sm transition-opacity duration-300`} />
+                <div className={`relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${m.barClass} text-white shadow-gold group-hover:scale-110 transition-transform duration-300`}>
+                  <p.Icon className="h-8 w-8" />
+                </div>
+              </div>
+
+              {/* Title — split "Cultural Roots" into 2 lines */}
+              <h3 className={`font-display text-xl md:text-2xl text-secondary mb-3 leading-snug transition-colors duration-300 group-hover:${m.accentClass} min-h-[3.5rem] md:min-h-[4rem] flex items-start`}>
+                {p.title === "Cultural Roots" ? (
+                  <>
+                    Cultural<br />Roots
+                  </>
+                ) : (
+                  p.title
+                )}
+              </h3>
+
+              {/* Animated accent line */}
+              <div className="relative h-0.5 w-full mb-4 overflow-hidden rounded-full bg-gold/10">
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  className={`absolute inset-y-0 left-0 bg-gradient-to-r ${m.barClass}`}
+                  initial={{ width: "0%" }}
+                  whileInView={{ width: "55%" }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.13, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                  className={`group relative flex flex-col overflow-hidden rounded-3xl border ${m.borderClass} bg-white shadow-[0_4px_24px_hsl(43_78%_52%/0.10)] hover:shadow-[0_16px_48px_hsl(43_78%_52%/0.24)] hover:-translate-y-2 transition-all duration-300`}
-                >
-                  {/* Accent top bar — thickens on hover */}
-                  <div className={`h-1 w-full shrink-0 bg-gradient-to-r ${m.barClass} transition-all duration-300 group-hover:h-[5px]`} />
+                  transition={{ delay: i * 0.13 + 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </div>
 
-                  {/* Warm wash overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-b ${m.glowClass} to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
+              {/* Description */}
+              <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                {p.desc}
+              </p>
 
-                  {/* Bottom accent line slides in on hover */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${m.barClass} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+              {/* Footer */}
+              <div className="mt-6 pt-4 border-t border-gold/15 flex items-center justify-between">
+                <span className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground/50 uppercase">
+                  Pillar {m.num}
+                </span>
+                <div className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${m.borderClass} transition-all duration-300 group-hover:border-transparent group-hover:shadow-md`}>
+                  <div className={`h-2.5 w-2.5 rounded-full bg-gradient-to-br ${m.barClass} transition-transform duration-300 group-hover:scale-125`} />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
 
-                  <div className="relative z-10 flex flex-col flex-1 p-7">
-
-                    {/* Top row: tag + devanagari numeral */}
-                    <div className="flex items-center justify-between mb-5">
-                      <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-bold tracking-[0.16em] uppercase ${m.tagClass}`}>
-                        {m.tag}
-                      </span>
-                      <span className={`font-sanskrit text-5xl font-bold leading-none select-none opacity-15 group-hover:opacity-30 transition-opacity duration-300 ${m.accentClass}`}>
-                        {m.devanagari}
-                      </span>
-                    </div>
-
-                    {/* Icon with glow ring */}
-                    <div className="relative mb-6 w-fit">
-                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${m.barClass} opacity-20 blur-md scale-110`} />
-                      {/* Glow ring expands on hover */}
-                      <div className={`absolute -inset-1 rounded-2xl bg-gradient-to-br ${m.barClass} opacity-0 group-hover:opacity-20 blur-sm transition-opacity duration-300`} />
-                      <div className={`relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${m.barClass} text-white shadow-gold group-hover:scale-110 transition-transform duration-300`}>
-                        <p.Icon className="h-8 w-8" />
-                      </div>
-                    </div>
-
-                    {/* Title — shifts to accent on hover */}
-                    <h3 className={`font-display text-xl md:text-2xl text-secondary mb-3 leading-snug transition-colors duration-300 group-hover:${m.accentClass}`}>
-                      {p.title}
-                    </h3>
-
-                    {/* Animated accent line */}
-                    <div className="relative h-0.5 w-full mb-4 overflow-hidden rounded-full bg-gold/10">
-                      <motion.div
-                        className={`absolute inset-y-0 left-0 bg-gradient-to-r ${m.barClass}`}
-                        initial={{ width: "0%" }}
-                        whileInView={{ width: "55%" }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.13 + 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                      />
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                      {p.desc}
-                    </p>
-
-                    {/* Footer */}
-                    <div className="mt-6 pt-4 border-t border-gold/15 flex items-center justify-between">
-                      <span className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground/50 uppercase">
-                        Pillar {m.num}
-                      </span>
-                      <div className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${m.borderClass} transition-all duration-300 group-hover:border-transparent group-hover:shadow-md`}>
-                        <div className={`h-2.5 w-2.5 rounded-full bg-gradient-to-br ${m.barClass} transition-transform duration-300 group-hover:scale-125`} />
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-        </div>
-      </section>
+  </div>
+</section>
 
       {/* ── Programs — Interactive Tabs ── */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative py-10 overflow-hidden">
         {/* Warm temple background */}
         <div className="absolute inset-0 bg-gradient-temple" />
         <MandalaBg className="absolute -left-40 bottom-0 h-[30rem] w-[30rem] opacity-10 hidden lg:block z-0" />
@@ -413,99 +454,120 @@ const Academics = () => {
       </section>
 
       {/* ── Subjects Grid ── */}
-      <section className="relative py-24 overflow-hidden">
-        {/* Warm parchment background */}
-        <div className="absolute inset-0 bg-[hsl(38_55%_95%)]" />
-        {/* Faint lotus dot pattern */}
-        <div className="absolute inset-0 opacity-[0.045]"
-          style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
-        {/* Gold rules */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+<section className="relative py-10 overflow-hidden">
+  {/* Warm parchment background */}
+  <div className="absolute inset-0 bg-[hsl(38_55%_95%)]" />
+  {/* Faint lotus dot pattern */}
+  <div className="absolute inset-0 opacity-[0.045]"
+    style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
+  {/* Gold rules */}
+  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
+  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
 
-        <div className="container-narrow relative z-10">
+  <div className="container-narrow relative z-10">
 
-          {/* Header */}
+    {/* Header */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-14"
+    >
+      <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sanskrit text-xs tracking-[0.22em] text-primary mb-5">
+        {t("academics.subjectsEyebrow")}
+      </span>
+      <h2 className="font-display text-3xl md:text-5xl font-bold text-secondary leading-tight">
+        {t("academics.subjectsTitle")}
+      </h2>
+      <div className="mt-4 flex items-center justify-center gap-3">
+        <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold/60" />
+        <span className="text-primary text-base">✦</span>
+        <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold/60" />
+      </div>
+      <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+        {t("academics.subjectsSubtitle")}
+      </p>
+    </motion.div>
+
+    {/* Cards */}
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {subjects.map((s, i) => {
+        // Function to split any title into 2 lines
+        const splitTitle = (title) => {
+          const words = title.split(' ');
+          const midPoint = Math.ceil(words.length / 2);
+          const firstLine = words.slice(0, midPoint).join(' ');
+          const secondLine = words.slice(midPoint).join(' ');
+          return { firstLine, secondLine };
+        };
+        
+        const { firstLine, secondLine } = splitTitle(s.name);
+        
+        return (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            key={i}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-14"
+            transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative overflow-hidden rounded-3xl bg-white border border-gold/25 shadow-[0_4px_20px_hsl(43_78%_52%/0.08)] hover:shadow-[0_10px_36px_hsl(43_78%_52%/0.18)] hover:-translate-y-2 transition-all duration-300 cursor-default flex flex-col h-full"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sanskrit text-xs tracking-[0.22em] text-primary mb-5">
-              {t("academics.subjectsEyebrow")}
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl font-bold text-secondary leading-tight">
-              {t("academics.subjectsTitle")}
-            </h2>
-            <div className="mt-4 flex items-center justify-center gap-3">
-              <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold/60" />
-              <span className="text-primary text-base">✦</span>
-              <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold/60" />
-            </div>
-            <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              {t("academics.subjectsSubtitle")}
-            </p>
-          </motion.div>
+            {/* Coloured top bar */}
+            <div className={`h-1 w-full bg-gradient-to-r ${s.color}`} />
 
-          {/* Cards */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {subjects.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative overflow-hidden rounded-3xl bg-white border border-gold/25 shadow-[0_4px_20px_hsl(43_78%_52%/0.08)] hover:shadow-[0_10px_36px_hsl(43_78%_52%/0.18)] hover:-translate-y-2 transition-all duration-300 cursor-default"
-              >
-                {/* Coloured top bar */}
-                <div className={`h-1 w-full bg-gradient-to-r ${s.color}`} />
+            {/* Hover tint — always on mobile, hover-only on desktop */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-[0.06] md:opacity-0 md:group-hover:opacity-[0.06] transition-opacity duration-300 pointer-events-none`} />
 
-                {/* Hover tint — always on mobile, hover-only on desktop */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-[0.06] md:opacity-0 md:group-hover:opacity-[0.06] transition-opacity duration-300 pointer-events-none`} />
-
-                <div className="relative z-10 p-6">
-                  {/* Icon + ritual emoji row */}
-                  <div className="flex items-start justify-between mb-5">
-                    {/* Icon with glow */}
-                    <div className="relative">
-                      <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${s.color} opacity-25 blur-md scale-110`} />
-                      <div className={`relative flex h-13 w-13 h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
-                        <s.Icon className="h-6 w-6" />
-                      </div>
-                    </div>
-                    {/* Ritual emoji */}
-                    <span className="text-3xl leading-none mt-0.5 group-hover:scale-110 transition-transform duration-300">{s.ritual}</span>
+            <div className="relative z-10 p-6 flex flex-col flex-1">
+              {/* Icon + ritual emoji row */}
+              <div className="flex items-start justify-between mb-5">
+                {/* Icon with glow */}
+                <div className="relative">
+                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${s.color} opacity-25 blur-md scale-110`} />
+                  <div className={`relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                    <s.Icon className="h-6 w-6" />
                   </div>
-
-                  {/* Sanskrit name */}
-                  <p className="font-sanskrit text-[11px] text-primary/60 mb-1 tracking-wide">{s.sanskritName}</p>
-
-                  {/* English name */}
-                  <h4 className="font-display text-base md:text-lg text-secondary mb-2 leading-snug">{s.name}</h4>
-
-                  {/* Divider */}
-                  <div className={`h-0.5 w-10 bg-gradient-to-r ${s.color} mb-3 rounded-full opacity-70`} />
-
-                  {/* Description */}
-                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-4">{s.desc}</p>
-
-                  {/* Ritual label badge */}
-                  <span className="inline-flex items-center gap-1 font-sanskrit text-[10px] tracking-[0.12em] text-primary/70 bg-primary/8 border border-primary/15 rounded-full px-2.5 py-1">
-                    {s.ritualLabel}
-                  </span>
                 </div>
+                {/* Ritual emoji */}
+                <span className="text-3xl leading-none mt-0.5 group-hover:scale-110 transition-transform duration-300">{s.ritual}</span>
+              </div>
 
-                {/* Bottom accent bar — always on mobile, slides in on desktop hover */}
-                <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.color} scale-x-100 md:scale-x-0 md:group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
-              </motion.div>
-            ))}
-          </div>
+              {/* Sanskrit name - fixed height for alignment */}
+              <p className="font-sanskrit text-[11px] text-primary/60 mb-1 tracking-wide min-h-[2rem]">
+                {s.sanskritName}
+              </p>
 
-        </div>
-      </section>
+              {/* English name - forced into 2 lines with fixed height */}
+              <h4 className="font-display text-base md:text-lg text-secondary mb-2 leading-tight min-h-[3rem] md:min-h-[3.5rem]">
+                {firstLine}<br />{secondLine}
+              </h4>
+
+              {/* Divider */}
+              <div className={`h-0.5 w-10 bg-gradient-to-r ${s.color} mb-3 rounded-full opacity-70`} />
+
+              {/* Description - fixed height for alignment */}
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-4 flex-1 min-h-[4rem] md:min-h-[5rem]">
+                {s.desc}
+              </p>
+
+              {/* Ritual label badge - aligned at bottom */}
+              <div className="mt-auto">
+                <span className="inline-flex items-center gap-1 font-sanskrit text-[10px] tracking-[0.12em] text-primary/70 bg-primary/8 border border-primary/15 rounded-full px-2.5 py-1">
+                  {s.ritualLabel}
+                </span>
+              </div>
+            </div>
+
+            {/* Bottom accent bar — always on mobile, slides in on desktop hover */}
+            <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.color} scale-x-100 md:scale-x-0 md:group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+          </motion.div>
+        );
+      })}
+    </div>
+
+  </div>
+</section>
 
       {/* ── Sanskrit Quote Banner ── */}
       <section className="relative bg-gradient-festive text-primary-foreground overflow-hidden">

@@ -133,6 +133,12 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        "horse-ride": {
+          "0%": { right: "-20%", opacity: "0", transform: "translateY(-50%)" },
+          "10%": { opacity: "1" },
+          "90%": { opacity: "1" },
+          "100%": { right: "120%", opacity: "0", transform: "translateY(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -152,6 +158,7 @@ export default {
         "sparkle": "sparkle 2.5s ease-in-out infinite",
         "ring-pulse": "ring-pulse 2.4s ease-out infinite",
         "title-shimmer": "title-shimmer 5s linear infinite",
+        "horse-ride": "horse-ride 3s ease-in-out forwards",
       },
     },
   },

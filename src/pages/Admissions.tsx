@@ -9,6 +9,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Holistic from "../assets/Holistic.png";
+import HolisticDev from "../assets/HolisticDev.webp"
+import ExpertFaculty from "../assets/ExpertFaculty.jpg"
+import RichCurriculum from "../assets/Rich Curriculum.jpg"
+import ProvenExcellence from "../assets/Proven Excellence.webp"
+import { 
+
+  Clock, 
+  MessageCircle, 
+  GraduationCap, 
+  Building, 
+
+} from "lucide-react";
 import {
   Heart, Users, BookOpen, Trophy,
   ArrowRight, CheckCircle2, Sparkles, Phone, Mail, ChevronDown,
@@ -50,10 +63,10 @@ const stepsMeta = [
 ] as const;
 
 const whyMeta = [
-  { icon: Heart,    stat: "100%", color: "from-primary to-orange-400" },
-  { icon: Users,    stat: "40+",  color: "from-amber-500 to-orange-500" },
-  { icon: BookOpen, stat: "CBSE", color: "from-amber-600 to-primary" },
-  { icon: Trophy,   stat: "98%",  color: "from-gold to-amber-500" },
+  { icon: Heart,    image: HolisticDev , stat: "100%", color: "from-primary to-orange-400" },
+  { icon: Users,    image: ExpertFaculty , stat: "40+",  color: "from-amber-500 to-orange-500" },
+  { icon: BookOpen, image:RichCurriculum, stat: "CBSE", color: "from-amber-600 to-primary" },
+  { icon: Trophy,   image:ProvenExcellence, stat: "98%",  color: "from-gold to-amber-500" },
 ] as const;
 
 const docKeys = ["doc1","doc2","doc3","doc4","doc5","doc6"] as const;
@@ -64,6 +77,8 @@ const faqIcons = ["🎓", "📝", "📋", "💰", "👥", "📅", "🚌"] as con
 
 const FaqItem = ({ question, answer, index }: { question: string; answer: string; index: number }) => {
   const [open, setOpen] = useState(false);
+
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -151,6 +166,7 @@ const FaqItem = ({ question, answer, index }: { question: string; answer: string
 
 /* ─── Component ─────────────────────────────────────────── */
 const Admissions = () => {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const { t } = useLanguage();
 
   const [submitted, setSubmitted] = useState(false);
@@ -360,67 +376,207 @@ const Admissions = () => {
       </section>
 
       {/* ── Why Choose Us ── */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-temple" />
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+<section className="relative py-24 overflow-hidden">
+  {/* Background */}
+  <div className="absolute inset-0 bg-gradient-temple" />
 
-        <div className="container-narrow relative z-10">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-14"
-          >
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sanskrit text-xs tracking-[0.22em] text-primary mb-5">
-              {t("admissions.whyEyebrow")}
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl font-bold text-secondary leading-tight">
-              {t("admissions.whyTitle")}
-            </h2>
-            <div className="mt-5 flex items-center justify-center gap-3">
-              <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold/60" />
-              <span className="text-primary text-base">✦</span>
-              <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold/60" />
-            </div>
-            <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              {t("admissions.whySubtitle")}
-            </p>
-          </motion.div>
+  <div
+    className="absolute inset-0 opacity-[0.04]"
+    style={{
+      backgroundImage:
+        "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)",
+      backgroundSize: "28px 28px",
+    }}
+  />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {whyMeta.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className={`group relative overflow-hidden rounded-2xl border border-gold/20 bg-white shadow-soft hover:shadow-warm hover:-translate-y-2 transition-all duration-300`}
-                style={{ boxShadow: "0 2px 16px hsl(43 78% 52% / 0.08)" }}
-              >
-                <div className={`h-[3px] w-full bg-gradient-to-r ${item.color}`} />
-                <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-[0.05] transition-opacity duration-300 pointer-events-none`} />
-                <div className="relative z-10 p-6 md:p-7">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-md mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                    <item.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-display text-lg text-secondary mb-2">{t((["admissions.why1Title","admissions.why2Title","admissions.why3Title","admissions.why4Title"] as const)[i])}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-5">{t((["admissions.why1Desc","admissions.why2Desc","admissions.why3Desc","admissions.why4Desc"] as const)[i])}</p>
-                  <div className="flex items-end gap-2 border-t border-gold/15 pt-4">
-                    <span className="font-display text-2xl font-bold text-gradient-saffron">{item.stat}</span>
-                    <span className="text-xs text-muted-foreground pb-0.5">{t((["admissions.why1StatLabel","admissions.why2StatLabel","admissions.why3StatLabel","admissions.why4StatLabel"] as const)[i])}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+  {/* Ambient Glow */}
+  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/10 rounded-full blur-[120px] pointer-events-none" />
+  <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+
+  {/* Borders */}
+  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
+  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+
+  <div className="container-narrow relative z-10">
+
+    {/* Header */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-16"
+    >
+      <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-5 py-2 font-sanskrit text-xs tracking-[0.22em] text-primary mb-6 backdrop-blur-sm shadow-sm">
+        ✦ {t("admissions.whyEyebrow")}
+      </span>
+
+      <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-secondary leading-tight tracking-tight">
+        {t("admissions.whyTitle")}
+      </h2>
+
+      <div className="mt-6 flex items-center justify-center gap-4">
+        <span className="h-px w-24 bg-gradient-to-r from-transparent to-gold/60" />
+        <span className="text-primary text-lg">✦</span>
+        <span className="h-px w-24 bg-gradient-to-l from-transparent to-gold/60" />
+      </div>
+
+      <p className="mt-5 text-muted-foreground max-w-2xl mx-auto leading-relaxed text-lg">
+        {t("admissions.whySubtitle")}
+      </p>
+    </motion.div>
+
+    {/* Cards */}
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      {whyMeta.map((item, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{
+            delay: i * 0.1,
+            duration: 0.6,
+          }}
+          className="
+            max-w-[340px] mx-auto w-full
+            group relative h-full flex flex-col
+            overflow-hidden rounded-lg
+            border border-gold/20
+            bg-white/95 backdrop-blur-md
+            shadow-[0_10px_30px_rgba(0,0,0,0.05)]
+            hover:-translate-y-2
+            hover:border-gold/40
+            hover:shadow-[0_20px_50px_-12px_rgba(220,168,40,0.25)]
+            transition-all duration-500
+            hover:scale-[1.03]
+          "
+        >
+
+          {/* Hover Glow */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-orange-300/10 via-transparent to-amber-300/10 z-0" />
+
+          {/* Image Area */}
+          <div className="relative h-56 w-full overflow-hidden bg-gray-50">
+
+            {item.image ? (
+              <>
+                <img
+                  src={item.image}
+                  alt="Feature"
+                  className="
+                    absolute inset-0 w-full h-full object-cover
+                    group-hover:scale-110
+                    transition-transform duration-700 ease-out
+                  "
+                />
+
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent z-10" />
+
+                {/* Shine Effect */}
+                <div className="
+                  absolute inset-0 opacity-0 group-hover:opacity-100
+                  transition duration-700
+                  bg-gradient-to-r from-transparent via-white/20 to-transparent
+                  -translate-x-full group-hover:translate-x-full
+                " />
+              </>
+            ) : (
+              <div className={`absolute inset-0 bg-gradient-to-br ${item.color}/10`} />
+            )}
+
+            {/* Top Highlight */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent z-20" />
           </div>
-        </div>
-      </section>
+
+          {/* Content */}
+          <div className="relative z-20 flex flex-col flex-grow px-7 pt-3 pb-7 -mt-2">
+
+            {/* Title */}
+            <h3 className="font-display text-xl font-bold text-secondary mb-3 leading-snug group-hover:text-primary transition-colors duration-300">
+              {
+                t(
+                  (
+                    [
+                      "admissions.why1Title",
+                      "admissions.why2Title",
+                      "admissions.why3Title",
+                      "admissions.why4Title",
+                    ] as const
+                  )[i]
+                )
+              }
+            </h3>
+
+            {/* Description */}
+            <p className="text-sm text-muted-foreground/90 leading-relaxed mb-6">
+              {
+                t(
+                  (
+                    [
+                      "admissions.why1Desc",
+                      "admissions.why2Desc",
+                      "admissions.why3Desc",
+                      "admissions.why4Desc",
+                    ] as const
+                  )[i]
+                )
+              }
+            </p>
+
+            {/* Footer (Stats + Icon in Cart style) */}
+            <div className="mt-auto flex items-end justify-between border-t border-gold/15 pt-5">
+
+              {/* Stats */}
+              <div className="flex flex-col">
+                <span className="font-display text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500 leading-none mb-1">
+                  {item.stat}
+                </span>
+
+                <span className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-[0.15em]">
+                  {
+                    t(
+                      (
+                        [
+                          "admissions.why1StatLabel",
+                          "admissions.why2StatLabel",
+                          "admissions.why3StatLabel",
+                          "admissions.why4StatLabel",
+                        ] as const
+                      )[i]
+                    )
+                  }
+                </span>
+              </div>
+
+              {/* Add to Cart Style Icon Button */}
+              <div className="
+                relative flex items-center justify-center 
+                h-12 w-12 rounded-xl bg-gold/10 
+                border border-gold/20 text-primary 
+                shadow-sm overflow-hidden shrink-0 ml-2
+                group-hover:shadow-[0_8px_20px_rgba(220,168,40,0.3)]
+                transition-all duration-500
+              ">
+                {/* Hover Gradient Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Icon */}
+                <item.icon className="relative z-10 h-5 w-5 group-hover:text-white group-hover:scale-110 transition-all duration-500" />
+              </div>
+
+            </div>
+
+            {/* Accent Line */}
+            <div className="mt-6 h-[3px] w-14 rounded-full bg-gradient-to-r from-orange-400 to-amber-400 group-hover:w-24 transition-all duration-500" />
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ── Documents + Form ── */}
       <section className="relative py-24 overflow-hidden">
@@ -580,7 +736,7 @@ const Admissions = () => {
                                 errors.grade ? "border-destructive" : validFields.grade ? "border-emerald-400" : "border-input"
                               }`}
                             >
-                              <option value="">{t("admissions.formGradePlaceholder")}</option>
+                              <option value="" disabled>Select Class (e.g. Class VI)</option>
                               <option value="Pre-K">Pre-K (Nursery)</option>
                               <option value="LKG">LKG</option>
                               <option value="UKG">UKG</option>
@@ -641,137 +797,156 @@ const Admissions = () => {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
+{/* ── FAQ ── */}
+{/* ── FAQ Section ── */}
+ {/* ── FAQ Section (Gap Fixed) ── */}
       <section className="relative py-24 overflow-hidden">
-        {/* Warm parchment background */}
-        <div className="absolute inset-0 bg-[hsl(38_55%_95%)]" />
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(38_55%_95%)] to-white" />
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "32px 32px" }} />
+          
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
         <div className="container-narrow relative z-10">
 
-          {/* ── Centred header ── */}
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sanskrit text-xs tracking-[0.22em] text-primary mb-5">
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-5 py-2 font-sanskrit text-xs tracking-[0.25em] text-primary mb-5 shadow-sm backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               {t("admissions.faqEyebrow")}
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-secondary leading-tight mb-4">
+            <h2 className="font-display text-4xl md:text-5xl font-extrabold text-secondary leading-tight mb-5 tracking-tight">
               {t("admissions.faqTitle")}
             </h2>
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <span className="h-px w-16 bg-gradient-to-r from-transparent to-gold/60" />
-              <span className="text-primary text-sm">✦</span>
-              <span className="h-px w-16 bg-gradient-to-l from-transparent to-gold/60" />
+            <div className="flex items-center justify-center gap-4 mb-6 opacity-80">
+              <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold/60" />
+              <span className="text-primary text-base">✦</span>
+              <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold/60" />
             </div>
-            <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto">
+            <p className="text-muted-foreground/90 leading-relaxed max-w-2xl mx-auto text-lg font-medium">
               {t("admissions.faqSubtitle")}
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-[1fr_1.8fr] gap-12 items-start">
+          {/* 
+            
+          */}
+          <div className="grid lg:grid-cols-[380px_1fr] gap-x-6 gap-y-12 items-start max-w-[1200px] mx-auto">
 
-            {/* ── Left panel ── */}
+            {/* ── Left panel (Sticky Info Cards) ── */}
             <motion.div
-              initial={{ opacity: 0, x: -24 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="lg:sticky lg:top-28"
+              transition={{ duration: 0.7, type: "spring", stiffness: 70 }}
+              className="lg:sticky lg:top-32 space-y-4 w-full"
             >
-
-              {/* Decorative card */}
-              <div className="rounded-2xl border border-gold/25 bg-white p-6 shadow-[0_4px_20px_hsl(43_78%_52%/0.10)] mb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-400 text-white shadow-[0_4px_12px_hsl(22_88%_52%/0.3)] mb-4">
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              {/* Card 1 */}
+              <div className="group rounded-2xl border border-gold/20 bg-white/90 backdrop-blur-md p-6 shadow-sm hover:shadow-md transition-all duration-500">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 border border-gold/20 text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
+                  <MessageCircle className="h-6 w-6" />
                 </div>
-                <p className="font-display text-secondary text-base mb-1">Still have questions?</p>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  Our admissions team is happy to help you personally.
-                </p>
-                <a
-                  href="tel:+919876543210"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-                >
-                  <Phone className="h-4 w-4" />
-                  +91 98765 43210
+                <h3 className="font-display text-secondary text-base font-bold mb-1.5">Still have questions?</h3>
+                <p className="text-xs text-muted-foreground/80 mb-4">Our admissions team is happy to help you personally.</p>
+                <a href="tel:+919876543210" className="inline-flex items-center gap-2.5 text-xs font-bold text-primary bg-gold/5 px-3 py-2 rounded-lg border border-gold/10">
+                  <Phone className="h-3.5 w-3.5" /> +91 98765 43210
                 </a>
               </div>
 
-              {/* Office hours card */}
-              <div className="rounded-2xl border border-gold/25 bg-white p-6 shadow-[0_4px_20px_hsl(43_78%_52%/0.08)] mb-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-gold to-amber-400 text-white shadow-md">
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+              {/* Card 2 */}
+              <div className="rounded-2xl border border-gold/20 bg-white/90 backdrop-blur-md p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/10 text-primary">
+                    <Clock className="h-5 w-5" />
                   </div>
-                  <p className="font-display text-secondary text-sm">Office Hours</p>
+                  <h3 className="font-display text-secondary text-base font-bold">Office Hours</h3>
                 </div>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {[
                     { day: "Mon – Fri", time: "9:00 AM – 5:00 PM" },
                     { day: "Saturday", time: "9:00 AM – 1:00 PM" },
-                    { day: "Sunday", time: "Closed" },
+                    { day: "Sunday", time: "Closed", closed: true },
                   ].map((row) => (
-                    <li key={row.day} className="flex items-center justify-between text-xs">
+                    <li key={row.day} className="flex items-center justify-between text-xs font-medium">
                       <span className="text-muted-foreground">{row.day}</span>
-                      <span className={`font-medium ${row.time === "Closed" ? "text-rose-500" : "text-secondary"}`}>{row.time}</span>
+                      <span className={row.closed ? "text-rose-500" : "text-secondary"}>{row.time}</span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-4 pt-3 border-t border-gold/15">
-                  <a href="mailto:admissions@psvidyamandir.in"
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
-                    <Mail className="h-3.5 w-3.5" />
-                    admissions@psvidyamandir.in
-                  </a>
-                </div>
               </div>
 
-              {/* Quick facts */}
-              <div className="rounded-2xl border border-gold/25 bg-white p-6 shadow-[0_4px_20px_hsl(43_78%_52%/0.08)]">
-                <p className="font-display text-secondary text-sm mb-4">Quick Facts</p>
-                <ul className="space-y-3">
+              {/* Card 3 */}
+              <div className="rounded-2xl border border-gold/20 bg-white/90 backdrop-blur-md p-6 shadow-sm">
+                <h3 className="font-display text-secondary text-base font-bold mb-5">Quick Facts</h3>
+                <ul className="space-y-4">
                   {[
-                    { icon: "🎓", label: "Affiliated Board", value: "CBSE" },
-                    { icon: "📅", label: "Process Duration", value: "2–3 Weeks" },
-                    { icon: "👨‍👩‍👧", label: "Student–Teacher", value: "20 : 1" },
-                    { icon: "🏫", label: "Classes Offered", value: "I – XII" },
+                    { icon: GraduationCap, label: "Board", value: "CBSE" },
+                    { icon: Clock, label: "Duration", value: "2–3 Weeks" },
+                    { icon: Users, label: "Ratio", value: "20 : 1" },
+                    { icon: Building, label: "Classes", value: "I – XII" },
                   ].map((f) => (
-                    <li key={f.label} className="flex items-center gap-3">
-                      <span className="text-lg leading-none w-6 text-center">{f.icon}</span>
-                      <div className="flex-1 flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{f.label}</span>
-                        <span className="text-xs font-bold text-secondary bg-gold/10 border border-gold/20 rounded-full px-2.5 py-0.5">{f.value}</span>
+                    <li key={f.label} className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/5 border border-gold/15 text-primary shrink-0">
+                          <f.icon className="h-4.5 w-4.5" />
+                        </div>
+                        <span className="text-xs text-muted-foreground font-medium">{f.label}</span>
                       </div>
+                      <span className="text-[10px] font-extrabold text-secondary bg-white border border-gold/20 rounded-full px-2.5 py-0.5 shadow-sm">
+                        {f.value}
+                      </span>
                     </li>
                   ))}
                 </ul>
               </div>
             </motion.div>
 
-            {/* ── Right: FAQ list ── */}
-            <div className="space-y-3">
-              {faqCount.map((n, i) => (
-                <FaqItem
-                  key={n}
-                  index={i}
-                  question={t((["admissions.faq1Q","admissions.faq2Q","admissions.faq3Q","admissions.faq4Q","admissions.faq5Q","admissions.faq6Q","admissions.faq7Q"] as const)[i])}
-                  answer={t((["admissions.faq1A","admissions.faq2A","admissions.faq3A","admissions.faq4A","admissions.faq5A","admissions.faq6A","admissions.faq7A"] as const)[i])}
-                />
-              ))}
+            {/* ── Right: FAQ list (Stretches to fill remaining space) ── */}
+            <div className="space-y-3 w-full">
+              {faqCount.map((n, i) => {
+                const isOpen = openFaq === i;
+                return (
+                  <motion.div 
+                    key={n}
+                    className={`group relative rounded-2xl border transition-all duration-500 overflow-hidden ${
+                      isOpen 
+                        ? "border-primary/30 bg-gradient-to-r from-white to-gold/5 shadow-md" 
+                        : "border-gold/15 bg-white/60 hover:bg-white hover:border-gold/30"
+                    }`}
+                  >
+                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-orange-400 origin-top transition-transform duration-500 ${isOpen ? "scale-y-100" : "scale-y-0"}`} />
+                    
+                    <button onClick={() => setOpenFaq(isOpen ? null : i)} className="flex w-full items-start justify-between gap-4 px-6 py-5 md:px-8 text-left outline-none">
+                      <span className={`font-display text-base md:text-lg font-bold leading-snug transition-all duration-300 ${isOpen ? "text-primary translate-x-1" : "text-secondary group-hover:translate-x-1"}`}>
+                        {t((["admissions.faq1Q","admissions.faq2Q","admissions.faq3Q","admissions.faq4Q","admissions.faq5Q","admissions.faq6Q","admissions.faq7Q"] as const)[i])}
+                      </span>
+                      <div className={`mt-0.5 flex items-center justify-center h-8 w-8 rounded-full shrink-0 transition-all duration-500 ${isOpen ? "bg-primary text-white" : "bg-gold/10 text-primary"}`}>
+                        <ChevronDown className={`h-5 w-5 transition-transform duration-500 ${isOpen ? "rotate-180" : ""}`} />
+                      </div>
+                    </button>
+                    
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
+                          <div className="px-6 pb-8 pt-0 md:px-8 text-sm md:text-[15px] text-muted-foreground font-medium leading-relaxed">
+                            <div className="h-px w-12 bg-primary/20 mb-4" />
+                            {t((["admissions.faq1A","admissions.faq2A","admissions.faq3A","admissions.faq4A","admissions.faq5A","admissions.faq6A","admissions.faq7A"] as const)[i])}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
             </div>
-
           </div>
         </div>
       </section>
@@ -786,7 +961,8 @@ const Admissions = () => {
             <h3 className="font-display text-3xl md:text-4xl font-bold mb-3">{t("admissions.ctaTitle")}</h3>
             <p className="opacity-90 max-w-xl mx-auto mb-8 text-lg">{t("admissions.ctaSubtitle")}</p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button asChild variant="gold" size="xl">
+              {/* btn 1 */}
+              <Button asChild variant="gold" size="xl" className="text-w">
                 <Link to="/contact">{t("admissions.ctaVisit")}</Link>
               </Button>
               <Button asChild size="xl" className="bg-white/20 hover:bg-white/30 border border-white/30 text-white">

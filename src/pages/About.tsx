@@ -114,7 +114,7 @@ const About = () => {
               key={m.title}
               variants={itemVariants}
               whileHover={{ y: -10, transition: { duration: 0.2 } }}
-              className="group relative overflow-hidden rounded-3xl section-surface ornate-frame border border-gold/30 shadow-soft hover:shadow-warm transition-shadow duration-300"
+              className="group relative overflow-hidden rounded-3xl section-surface ornate-frame border border-gold/30 shadow-soft hover:shadow-warm transition-shadow duration-300 flex flex-col h-full"
             >
               <div className={`h-2 w-full bg-gradient-to-r ${m.color}`} />
               {/* dot pattern on hover */}
@@ -124,7 +124,7 @@ const About = () => {
               <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_12%_12%,hsl(43_88%_55%/0.16),transparent_42%)]" />
               {/* shimmer sweep */}
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
-              <div className="relative z-10 p-7 md:p-8">
+              <div className="relative z-10 p-7 md:p-8 flex flex-col flex-grow">
                 <div className="flex items-start justify-between gap-4">
                   <motion.div
                     animate={{ y: [0, -5, 0] }}
@@ -141,9 +141,11 @@ const About = () => {
                 </div>
                 <h3 className="mt-5 font-display text-2xl md:text-[1.75rem] text-secondary">{m.title}</h3>
                 <p className="mt-3 text-muted-foreground leading-relaxed text-[0.98rem]">{m.desc}</p>
-                <div className="mt-6 flex items-center gap-3 rounded-2xl border border-gold/20 bg-background/60 px-4 py-3">
-                  <span className="h-2.5 w-2.5 rounded-full bg-gradient-saffron shadow-gold animate-[glow-pulse_3s_ease-in-out_infinite]" />
-                  <p className="text-sm font-medium text-foreground/80">{m.footer}</p>
+                <div className="mt-auto pt-6">
+                  <div className="flex items-center gap-3 rounded-2xl border border-gold/20 bg-background/60 px-4 py-3">
+                    <span className="h-2.5 w-2.5 rounded-full bg-gradient-saffron shadow-gold animate-[glow-pulse_3s_ease-in-out_infinite]" />
+                    <p className="text-sm font-medium text-foreground/80">{m.footer}</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -152,145 +154,161 @@ const About = () => {
       </section>
 
       {/* ── Timeline ── */}
-      <section className="bg-gradient-temple py-20">
-        <div className="container-narrow">
-          <SectionHeader eyebrow={t("about.timeline.eyebrow")} title={t("about.timeline.title")} subtitle={t("about.timeline.subtitle")} />
-          <div className="relative mx-auto max-w-4xl pl-8 sm:pl-10">
-            {/* vertical line */}
-            <motion.div
-              initial={{ scaleY: 0, originY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute left-3 top-3 bottom-3 w-px bg-gradient-to-b from-primary via-gold to-secondary"
-            />
-            {timeline.map((item, i) => (
-              <motion.article
-                key={item.year}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.05 }}
-                transition={{ delay: i * 0.15, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="relative mb-6 last:mb-0 group"
-              >
-                {/* dot */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300 }}
-                  className="absolute -left-[1.95rem] top-7 h-4 w-4 rounded-full bg-gradient-saffron shadow-gold ring-4 ring-background"
-                />
-                <motion.div
-                  whileHover={{ x: 6, transition: { duration: 0.2 } }}
-                  className="rounded-2xl section-surface p-5 md:p-6 border border-gold/30 shadow-soft hover:shadow-warm transition-shadow duration-300"
-                >
-                  <div className="inline-flex rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-xs font-semibold tracking-[0.14em] text-primary">
-                    YEAR {item.year}
-                  </div>
-                  <h4 className="font-display text-2xl md:text-3xl text-secondary mt-3 mb-2">{item.title}</h4>
-                  <p className="text-muted-foreground leading-relaxed text-base md:text-lg">{item.desc}</p>
-                </motion.div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
+<section className="bg-gradient-temple py-20">
+  <div className="container-narrow">
+    <SectionHeader eyebrow={t("about.timeline.eyebrow")} title={t("about.timeline.title")} subtitle={t("about.timeline.subtitle")} />
+    <div className="relative mx-auto max-w-4xl">
+      {/* vertical line */}
+      <motion.div
+        initial={{ scaleY: 0, originY: 0 }}
+        whileInView={{ scaleY: 1 }}
+        viewport={{ once: true, amount: 0.05 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute left-[27px] top-3 bottom-3 w-px bg-gradient-to-b from-primary via-gold to-secondary"
+      />
+      {timeline.map((item, i) => (
+        <motion.article
+          key={item.year}
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.05 }}
+          transition={{ delay: i * 0.15, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mb-6 last:mb-0 group pl-[60px]"
+        >
+          {/* dot */}
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.15 + 0.2, type: "spring", stiffness: 300 }}
+            className="absolute left-[19px] top-4 h-4 w-4 rounded-full bg-gradient-saffron shadow-gold ring-4 ring-background"
+          />
+          <motion.div
+            whileHover={{ x: 6, transition: { duration: 0.2 } }}
+            className="rounded-2xl section-surface p-5 md:p-6 border border-gold/30 shadow-soft hover:shadow-warm transition-shadow duration-300"
+          >
+            <div className="inline-flex rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-xs font-semibold tracking-[0.14em] text-primary">
+              YEAR {item.year}
+            </div>
+            <h4 className="font-display text-2xl md:text-3xl text-secondary mt-3 mb-2">{item.title}</h4>
+            <p className="text-muted-foreground leading-relaxed text-base md:text-lg">{item.desc}</p>
+          </motion.div>
+        </motion.article>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ── Achievements ── */}
-      <section className="container-narrow py-20 relative overflow-hidden">
-        <SectionHeader eyebrow={t("about.achievements.eyebrow")} title={t("about.achievements.title")} subtitle={t("about.achievements.subtitle")} />
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.05 }}
-          className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4 relative z-10"
-        >
-          {achievements.map((a, i) => (
+<section className="container-narrow py-20 relative overflow-hidden">
+  <SectionHeader eyebrow={t("about.achievements.eyebrow")} title={t("about.achievements.title")} subtitle={t("about.achievements.subtitle")} />
+  <motion.div
+    variants={containerVariants}
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.05 }}
+    className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4 relative z-10"
+  >
+    {achievements.map((a, i) => (
+      <motion.div
+        key={a.title}
+        variants={itemVariants}
+        whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2 } }}
+        className="group h-full overflow-hidden rounded-3xl border border-gold/20 bg-card/85 shadow-soft hover:shadow-warm transition-shadow duration-300"
+      >
+        <div className="h-2 w-full bg-gradient-festive" />
+        {/* big watermark number */}
+        <div className="absolute top-4 right-4 font-display text-[5rem] font-bold leading-none text-primary/[0.05] select-none pointer-events-none">
+          {String(i + 1).padStart(2, "0")}
+        </div>
+        <div className="flex h-full flex-col p-6 md:p-7">
+          <div className="flex items-start justify-between gap-4">
             <motion.div
-              key={a.title}
-              variants={itemVariants}
-              whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2 } }}
-              className="group h-full overflow-hidden rounded-3xl border border-gold/20 bg-card/85 shadow-soft hover:shadow-warm transition-shadow duration-300"
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4 + i * 0.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+              whileHover={{ rotate: -12, scale: 1.25 }}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-festive text-primary-foreground shadow-md"
             >
-              <div className="h-2 w-full bg-gradient-festive" />
-              {/* big watermark number */}
-              <div className="absolute top-4 right-4 font-display text-[5rem] font-bold leading-none text-primary/[0.05] select-none pointer-events-none">
-                {String(i + 1).padStart(2, "0")}
-              </div>
-              <div className="flex h-full flex-col p-6 md:p-7">
-                <div className="flex items-start justify-between gap-4">
-                  <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 4 + i * 0.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-                    whileHover={{ rotate: -12, scale: 1.25 }}
-                    className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-festive text-primary-foreground shadow-md"
-                  >
-                    <a.icon className="h-7 w-7" />
-                  </motion.div>
-                  <span className="rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-primary">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h4 className="mt-5 font-display text-xl md:text-[1.65rem] text-secondary leading-tight">{a.title}</h4>
-                <p className="mt-3 text-sm md:text-[0.98rem] text-muted-foreground leading-relaxed">{a.desc}</p>
-                <div className="mt-auto flex items-center gap-2 pt-6 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80">
-                  <span className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-                  <span>Recognition</span>
-                  <span className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-                </div>
-              </div>
+              <a.icon className="h-7 w-7" />
             </motion.div>
-          ))}
-        </motion.div>
-        <MandalaBg className="absolute right-0 bottom-0 w-96 h-96 opacity-5 pointer-events-none" />
-      </section>
+            <span className="rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-primary">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+          </div>
+          <h4 className="mt-5 font-display text-xl md:text-[1.65rem] text-secondary leading-tight text-left">
+            {a.title}
+          </h4>
+          <p className="mt-3 text-sm md:text-[0.98rem] text-muted-foreground leading-relaxed text-left">
+            {a.desc}
+          </p>
+          <div className="mt-auto flex items-center gap-2 pt-6 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+            <span className="text-center">Recognition</span>
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          </div>
+        </div>
+      </motion.div>
+    ))}
+  </motion.div>
+  <MandalaBg className="absolute right-0 bottom-0 w-96 h-96 opacity-5 pointer-events-none" />
+</section>
 
       {/* ── Facilities ── */}
-      <section className="bg-gradient-temple py-20">
-        <div className="container-narrow">
-          <SectionHeader eyebrow={t("about.facilities.eyebrow")} title={t("about.facilities.title")} subtitle={t("about.facilities.subtitle")} />
+<section className="bg-gradient-temple py-20">
+  <div className="container-narrow">
+    <SectionHeader 
+      eyebrow={t("about.facilities.eyebrow")} 
+      title={t("about.facilities.title")} 
+      subtitle={t("about.facilities.subtitle")} 
+    />
 
-          {/* facility cards */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.05 }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
-            {translatedFacilities.map((facility, i) => (
-              <motion.div
-                key={facility.title}
-                variants={itemVariants}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="group relative overflow-hidden rounded-2xl bg-card border border-gold/25 shadow-soft hover:shadow-warm transition-shadow duration-300"
-              >
-                {/* image top */}
-                <div className="relative h-36 overflow-hidden">
-                  <img src={facility.image} alt={facility.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-3 left-4">
-                    <span className="text-xs font-bold text-white/90 font-display tracking-wide">{String(i + 1).padStart(2, "0")}</span>
-                  </div>
-                </div>
-                {/* content */}
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-saffron text-white shrink-0 group-hover:shadow-gold transition-shadow">
-                      <CheckCircle2 className="h-4 w-4" />
-                    </div>
-                    <h4 className="font-display text-lg text-secondary">{facility.title}</h4>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{facility.desc}</p>
-                </div>
-                <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-festive scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+    {/* facility cards */}
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.05 }}
+      className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
+    >
+      {translatedFacilities.map((facility, i) => (
+        <motion.div
+          key={facility.title}
+          variants={itemVariants}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
+          className="group relative overflow-hidden rounded-2xl bg-card border border-gold/25 shadow-soft hover:shadow-warm transition-shadow duration-300"
+        >
+          {/* image top */}
+          <div className="relative h-36 overflow-hidden">
+            <img src={facility.image} alt={facility.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute bottom-3 left-4">
+              <span className="text-xs font-bold text-white/90 font-display tracking-wider bg-black/30 px-2 py-0.5 rounded">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
+          
+          {/* content */}
+          <div className="p-5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-saffron text-white shadow-md group-hover:shadow-gold group-hover:scale-110 transition-all duration-300">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <h3 className="font-display text-lg font-semibold text-secondary leading-tight tracking-tight pt-0.5">
+                {facility.title}
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {facility.desc}
+            </p>
+          </div>
+          
+          <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-festive scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+</section>
 
       {/* ── Principal ── */}
       <section className="py-20">
