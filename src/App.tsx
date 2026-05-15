@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { Layout } from "./components/Layout";
+import { Layout } from "./components/Layout.jsx";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import Index from "./pages/Index.tsx";
 import About from "./pages/About.tsx";
