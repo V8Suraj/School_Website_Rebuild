@@ -5,7 +5,6 @@ import {
   ClipboardList, MessageSquare, FileText, Wallet, LogOut,
   GraduationCap, X, Images, ScrollText, ArrowLeft,
 } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
 
 const navItems = [
   { to: "/admin",            label: "Dashboard",      icon: LayoutDashboard, end: true },
@@ -21,12 +20,7 @@ const navItems = [
   { to: "/admin/circular",   label: "Circular / Cert", icon: ScrollText },
 ];
 
-interface AdminSidebarProps {
-  mobileOpen: boolean;
-  setMobileOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-export const AdminSidebar = ({ mobileOpen, setMobileOpen }: AdminSidebarProps) => {
+export const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {

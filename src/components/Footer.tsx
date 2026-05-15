@@ -187,12 +187,12 @@ export const Footer = () => {
           <p className="text-[10px] uppercase tracking-[0.18em] text-stone-600">
             © {new Date().getFullYear()} Vidyalaya · All Rights Reserved
           </p>
-{/* 
+
           <div className="rounded-full border border-amber-900/30 bg-amber-900/5 px-5 py-1.5">
             <span className="font-sanskrit text-[10px] tracking-[0.25em] text-amber-500/70">
               {t("footer.blessing")}
             </span>
-          </div> */}
+          </div>
         </div>
       </div>
     </footer>
