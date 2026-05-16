@@ -12,9 +12,9 @@ const isAdminLoggedIn = () => typeof window !== "undefined" && !!localStorage.ge
 const mainLinks = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
+  { to: "/admissions", label: "Admissions" }, // Added Admissions here
   { to: "/contact", label: "Contact" },
 ];
-
 
 const academicsDropdown = [
   { to: "/academics", label: "Academics" },
@@ -45,52 +45,50 @@ export const Navbar = () => {
         </motion.div>
 
         <motion.nav
-  initial={{ opacity: 0, y: -8 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5, delay: 0.05 }}
-  className="hidden lg:flex items-center gap-1"
->
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="hidden lg:flex items-center gap-1"
+        >
+          {/* Home About Admissions Contact */}
+          {mainLinks.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === "/"}
+              className={({ isActive }) =>
+                cn(
+                  "relative px-4 py-2 text-sm font-medium transition-colors",
+                  "after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-1 after:h-0.5 after:bg-gradient-saffron after:transition-all after:duration-300",
+                  isActive
+                    ? "text-primary after:w-8"
+                    : "text-foreground/80 hover:text-primary after:w-0 hover:after:w-8"
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
 
-  {/* Home About Contact */}
-  {mainLinks.map((item) => (
-    <NavLink
-      key={item.to}
-      to={item.to}
-      end={item.to === "/"}
-      className={({ isActive }) =>
-        cn(
-          "relative px-4 py-2 text-sm font-medium transition-colors",
-          "after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-1 after:h-0.5 after:bg-gradient-saffron after:transition-all after:duration-300",
-          isActive
-            ? "text-primary after:w-8"
-            : "text-foreground/80 hover:text-primary after:w-0 hover:after:w-8"
-        )
-      }
-    >
-      {item.label}
-    </NavLink>
-  ))}
-
-  {/* Academics Calendar Fees Notices */}
-  {academicsDropdown.map((item) => (
-    <NavLink
-      key={item.to}
-      to={item.to}
-      className={({ isActive }) =>
-        cn(
-          "relative px-4 py-2 text-sm font-medium transition-colors",
-          "after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-1 after:h-0.5 after:bg-gradient-saffron after:transition-all after:duration-300",
-          isActive
-            ? "text-primary after:w-8"
-            : "text-foreground/80 hover:text-primary after:w-0 hover:after:w-8"
-        )
-      }
-    >
-      {item.label}
-    </NavLink>
-  ))}
-
-</motion.nav>
+          {/* Academics Calendar Fees Notices */}
+          {academicsDropdown.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                cn(
+                  "relative px-4 py-2 text-sm font-medium transition-colors",
+                  "after:content-[''] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-1 after:h-0.5 after:bg-gradient-saffron after:transition-all after:duration-300",
+                  isActive
+                    ? "text-primary after:w-8"
+                    : "text-foreground/80 hover:text-primary after:w-0 hover:after:w-8"
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </motion.nav>
 
         <div className="hidden lg:flex items-center gap-3">
           <div className="flex items-center rounded-full border border-gold/35 bg-card/70 p-1">
@@ -148,40 +146,40 @@ export const Navbar = () => {
             className="lg:hidden border-t border-gold/30 bg-card/95 backdrop-blur"
           >
             <nav className="container-narrow flex flex-col py-4 gap-1">
-              {/* Home About Contact */}
-{mainLinks.map((item) => (
-  <NavLink
-    key={item.to}
-    to={item.to}
-    end={item.to === "/"}
-    onClick={() => setOpen(false)}
-    className={({ isActive }) =>
-      cn(
-        "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-        isActive ? "bg-primary/10 text-primary" : "hover:bg-muted",
-      )
-    }
-  >
-    {item.label}
-  </NavLink>
-))}
+              {/* Home About Admissions Contact */}
+              {mainLinks.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === "/"}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                      isActive ? "bg-primary/10 text-primary" : "hover:bg-muted",
+                    )
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
 
-{/* Academics links */}
-{academicsDropdown.map((item) => (
-  <NavLink
-    key={item.to}
-    to={item.to}
-    onClick={() => setOpen(false)}
-    className={({ isActive }) =>
-      cn(
-        "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-        isActive ? "bg-primary/10 text-primary" : "hover:bg-muted",
-      )
-    }
-  >
-    {item.label}
-  </NavLink>
-))}
+              {/* Academics links */}
+              {academicsDropdown.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                      isActive ? "bg-primary/10 text-primary" : "hover:bg-muted",
+                    )
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
 
               <div className="mt-2 mb-1 flex items-center rounded-full border border-gold/35 bg-card/70 p-1 w-fit">
                 <button
