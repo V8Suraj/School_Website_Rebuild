@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Layout } from "./components/Layout.jsx";
 import { AdminLayout } from "./components/admin/AdminLayout";
+import { Layout } from "./components/Layout";
+import { AdminLayout } from "./components/admin/AdminLayout.jsx";
 import Index from "./pages/Index.tsx";
 import About from "./pages/About.tsx";
 import Academics from "./pages/Academics.tsx";

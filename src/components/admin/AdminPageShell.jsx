@@ -1,16 +1,7 @@
-import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
-interface AdminPageShellProps {
-  title: string;
-  subtitle?: string;
-  onAdd?: () => void;
-  addLabel?: string;
-  children: ReactNode;
-}
-
-export const AdminPageShell = ({ title, subtitle, onAdd, addLabel = "Add New", children }: AdminPageShellProps) => (
+export const AdminPageShell = ({ title, subtitle, onAdd, addLabel = "Add New", children }) => (
   <div className="p-6 md:p-8 space-y-6">
     <div className="flex items-center justify-between">
       <div>

@@ -55,15 +55,16 @@ const today = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "nu
 
 // ─── component ─────────────────────────────────────────────────────────────────
 const AdminDashboard = () => (
-  <div className="p-4 sm:p-6 md:p-8 space-y-6 max-w-7xl mx-auto">
+  <div className="p-4 sm:p-6 md:p-8 space-y-12 max-w-7xl mx-auto">
 
     {/* ── Greeting banner ── */}
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#7c2d12] via-[#c2410c] to-[#f97316] p-5 sm:p-6 text-white shadow-temple"
-    >
+      className="relative overflow-hidden rounded-2xl 
+      bg-gradient-to-br from-[#7c2d12] via-[#c2410c] to-[#f97316]     
+      p-5 sm:p-6 text-white shadow-2xl border border-white/10 backdrop-blur-xl">
       {/* faint mandala watermark */}
       <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full border border-white/10 opacity-20" />
       <div className="pointer-events-none absolute -right-4 -top-4 h-32 w-32 rounded-full border border-white/10 opacity-20" />
@@ -71,7 +72,7 @@ const AdminDashboard = () => (
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <p className="text-white/70 text-sm font-medium">{today}</p>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold mt-0.5">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold mt-0.5 text-white drop-shadow-lg tracking-wide">
             {greeting()}, Admin 🙏
           </h1>
           <p className="text-white/80 text-sm mt-1">Here's what's happening at Vidyalaya today.</p>
@@ -97,7 +98,7 @@ const AdminDashboard = () => (
     </motion.div>
 
     {/* ── Stats grid ── */}
-    <div>
+    <div  className="mb-16">
       <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-3">Overview</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
         {stats.map(({ label, value, trend, icon: Icon, to, gradient, light }, i) => (
@@ -130,7 +131,7 @@ const AdminDashboard = () => (
     </div>
 
     {/* ── Bottom two columns ── */}
-    <div className="grid lg:grid-cols-5 gap-5">
+  <div className="grid lg:grid-cols-5 gap-8 mt-6">
 
       {/* Recent Activity — 2 cols */}
       <motion.div
@@ -197,12 +198,16 @@ const AdminDashboard = () => (
             >
               <Link
                 to={to}
-                className="group flex flex-col items-center gap-2 p-3.5 rounded-xl border border-gold/15 bg-background/60 hover:bg-primary/5 hover:border-primary/25 hover:-translate-y-0.5 transition-all duration-200 text-center"
+                className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-gold/15 
+                bg-background/60 hover:bg-primary/5 hover:border-primary/25  
+                 hover:-translate-y-0.5 transition-all duration-200 text-center"
               >
-                <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-sm group-hover:scale-110 transition-transform duration-200`}>
-                  <Icon className="h-4 w-4" />
-                </div>
-                <span className="text-[11px] font-medium text-foreground/75 group-hover:text-primary transition-colors leading-tight">{label}</span>
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-sm group-hover:scale-110 transition-transform duration-200`}>
+                <Icon className="h-5 w-5" />   
+                 </div>    
+                <span className="text-sm font-semibold text-foreground/80 group-hover:text-primary transition-colors text-center">
+               {label} 
+                </span>  
               </Link>
             </motion.div>
           ))}
