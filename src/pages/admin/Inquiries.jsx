@@ -4,15 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageSquare, Reply, Trash2, User, AtSign, Calendar, Search, Languages, Loader2, BookOpen } from "lucide-react";
 import { translateToHindi, translateFields } from "@/lib/translate";
 
-interface Inquiry {
-  id: number;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  date: string;
-  read: boolean;
-}
+
 
 const SUBJECT_FILTERS = [
   "All",
@@ -27,7 +19,7 @@ const SUBJECT_FILTERS = [
   "Other",
 ];
 
-const seed: Inquiry[] = [
+const seed = [
   { id: 1, name: "Sunita Verma",  email: "sunita@example.com",  subject: "Admissions",           message: "I would like to know about the admission process for Class III.", date: "2026-01-14", read: false },
   { id: 2, name: "Rajesh Kumar",  email: "rajesh@example.com",  subject: "Fee Structure",         message: "Can you please share the fee structure for Class X?",            date: "2026-01-13", read: false },
   { id: 3, name: "Meena Joshi",   email: "meena@example.com",   subject: "General Inquiry",       message: "Does the school provide bus service from Sector 12?",            date: "2026-01-11", read: true  },
@@ -37,20 +29,20 @@ const seed: Inquiry[] = [
 ];
 
 const AdminInquiries = () => {
-  const [items, setItems]         = useState<Inquiry[]>(seed);
-  const [selected, setSelected]   = useState<Inquiry | null>(null);
-  const [deleteId, setDeleteId]   = useState<number | null>(null);
+  const [items, setItems]         = useState(seed);
+  const [selected, setSelected]   = useState(null);
+  const [deleteId, setDeleteId]   = useState(null);
   const [search, setSearch]       = useState("");
   const [filterSubject, setFilterSubject] = useState("All");
 
   // translation state for detail panel
   const [translating, setTranslating]   = useState(false);
-  const [translatedMsg, setTranslatedMsg] = useState<string | null>(null);
-  const [translateDir, setTranslateDir]   = useState<"en-hi" | "hi-en">("en-hi");
+  const [translatedMsg, setTranslatedMsg] = useState(null);
+  const [translateDir, setTranslateDir]   = useState("en-hi");
 
-  const markRead = (id: number) => setItems(prev => prev.map(i => i.id === id ? { ...i, read: true } : i));
+  const markRead = (id) => setItems(prev => prev.map(i => i.id === id ? { ...i, read: true } : i));
 
-  const handleOpen = (inq: Inquiry) => {
+  const handleOpen = (inq) => {
     markRead(inq.id);
     setSelected({ ...inq, read: true });
     setTranslatedMsg(null);

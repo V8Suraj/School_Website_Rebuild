@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef } from "react";
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,46 +14,39 @@ import {
 import { translateFields } from "@/lib/translate";
 
 // ─── types & config ────────────────────────────────────────────────────────────
-type NoticeCategory = "School Notice" | "Government Notice" | "Urgent Notice";
 
-interface Notice {
-  id: number; title: string; body: string;
-  titleHi?: string; bodyHi?: string;
-  category: NoticeCategory; date: string;
-  attachment?: string; attachmentName?: string;
-}
 
-const CAT_CFG: Record<NoticeCategory, { bg: string; text: string; border: string; dot: string; icon: React.ElementType }> = {
+const CAT_CFG = {
   "School Notice":     { bg: "bg-blue-50",   text: "text-blue-700",   border: "border-blue-200",   dot: "bg-blue-500",   icon: School },
   "Government Notice": { bg: "bg-green-50",  text: "text-green-700",  border: "border-green-200",  dot: "bg-green-500",  icon: Building2 },
   "Urgent Notice":     { bg: "bg-red-50",    text: "text-red-700",    border: "border-red-200",    dot: "bg-red-500",    icon: AlertTriangle },
 };
 
-const CATS: NoticeCategory[] = ["School Notice", "Government Notice", "Urgent Notice"];
+const CATS = ["School Notice", "Government Notice", "Urgent Notice"];
 
-const seed: Notice[] = [
+const seed = [
   { id: 1, title: "Exam Schedule – Term 2",      body: "Term 2 examinations will commence from 10th February 2026. All students must carry their hall tickets.", category: "School Notice",     date: "2026-01-12" },
   { id: 2, title: "Government Circular – RTE",   body: "All schools must comply with RTE norms for the academic year 2025–26 as per the government directive.",  category: "Government Notice", date: "2026-01-09" },
   { id: 3, title: "Emergency Holiday – 15 Jan",  body: "School will remain closed on 15th January 2026 due to local civic body elections.",                       category: "Urgent Notice",     date: "2026-01-08" },
   { id: 4, title: "Annual Sports Day Notice",    body: "All students participating in Sports Day events must submit their consent forms by 5th February.",        category: "School Notice",     date: "2026-01-06" },
 ];
 
-const emptyForm = { title: "", body: "", titleHi: "", bodyHi: "", category: "School Notice" as NoticeCategory, date: "", attachment: "", attachmentName: "" };
+const emptyForm = { title: "", body: "", titleHi: "", bodyHi: "", category: "School Notice", date: "", attachment: "", attachmentName: "" };
 
 // ─── component ─────────────────────────────────────────────────────────────────
 const AdminNotices = () => {
-  const [items, setItems]       = useState<Notice[]>(seed);
-  const [modal, setModal]       = useState<"add" | "edit" | null>(null);
-  const [editing, setEditing]   = useState<Notice | null>(null);
+  const [items, setItems]       = useState(seed);
+  const [modal, setModal]       = useState(null);
+  const [editing, setEditing]   = useState(null);
   const [form, setForm]         = useState(emptyForm);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState(null);
   const [search, setSearch]     = useState("");
-  const [filterCat, setFilterCat] = useState<"All" | NoticeCategory>("All");
+  const [filterCat, setFilterCat] = useState("All");
   const [translating, setTranslating] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef(null);
 
   const openAdd = () => { setEditing(null); setForm(emptyForm); setModal("add"); };
-  const openEdit = (n: Notice) => {
+  const openEdit = (n) => {
     setEditing(n);
     setForm({ title: n.title, body: n.body, titleHi: n.titleHi ?? "", bodyHi: n.bodyHi ?? "", category: n.category, date: n.date, attachment: n.attachment ?? "", attachmentName: n.attachmentName ?? "" });
     setModal("edit");
@@ -67,7 +60,7 @@ const AdminNotices = () => {
     setTranslating(false);
   };
 
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setForm(f => ({ ...f, attachment: URL.createObjectURL(file), attachmentName: file.name }));
@@ -98,8 +91,8 @@ const AdminNotices = () => {
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search notices…" className="pl-9 border-gold/25 focus:border-primary/50" />
         </div>
         <div className="flex gap-1.5 flex-wrap">
-          {(["All", ...CATS] as const).map(c => (
-            <button key={c} onClick={() => setFilterCat(c as "All" | NoticeCategory)}
+          {(["All", ...CATS]).map(c => (
+            <button key={c} onClick={() => setFilterCat(c)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                 filterCat === c ? "bg-primary text-white border-primary" : "border-gold/30 text-muted-foreground hover:border-primary/40 hover:text-foreground"
               }`}

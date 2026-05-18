@@ -6,9 +6,8 @@ import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pencil, Trash2, X, Wallet, Save, Plus, Info } from "lucide-react";
 
-interface FeeRecord { id: number; className: string; tuition: string; admission: string; exam: string; other: string; }
 
-const seed: FeeRecord[] = [
+const seed = [
   { id: 1, className: "Class I – II",   tuition: "₹2,500/month", admission: "₹5,000", exam: "₹800",   other: "₹500" },
   { id: 2, className: "Class III – V",  tuition: "₹3,000/month", admission: "₹5,000", exam: "₹1,000", other: "₹500" },
   { id: 3, className: "Class VI – VIII",tuition: "₹3,500/month", admission: "₹6,000", exam: "₹1,200", other: "₹600" },
@@ -22,17 +21,17 @@ const fields = [
   { key: "admission",  label: "Admission Fee",    placeholder: "e.g. ₹5,000" },
   { key: "exam",       label: "Exam Fee",         placeholder: "e.g. ₹800" },
   { key: "other",      label: "Other Charges",    placeholder: "e.g. ₹500" },
-] as const;
+];
 
 const AdminFees = () => {
-  const [items, setItems] = useState<FeeRecord[]>(seed);
+  const [items, setItems] = useState(seed);
   const [showForm, setShowForm] = useState(false);
-  const [editing, setEditing] = useState<FeeRecord | null>(null);
+  const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ className: "", tuition: "", admission: "", exam: "", other: "" });
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState(null);
 
   const openAdd = () => { setEditing(null); setForm({ className: "", tuition: "", admission: "", exam: "", other: "" }); setShowForm(true); };
-  const openEdit = (f: FeeRecord) => { setEditing(f); setForm({ className: f.className, tuition: f.tuition, admission: f.admission, exam: f.exam, other: f.other }); setShowForm(true); };
+  const openEdit = (f) => { setEditing(f); setForm({ className: f.className, tuition: f.tuition, admission: f.admission, exam: f.exam, other: f.other }); setShowForm(true); };
   const handleSave = () => {
     if (!form.className.trim()) return;
     if (editing) setItems(items.map(i => i.id === editing.id ? { ...editing, ...form } : i));

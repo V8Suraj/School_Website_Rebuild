@@ -15,7 +15,7 @@ const AdminRegister = () => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "", secretKey: "" });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!form.name.trim()) { setError("Please enter admin name."); return; }
@@ -96,7 +96,7 @@ const AdminRegister = () => {
                     <Icon className="h-3.5 w-3.5" /> {label}
                   </Label>
                   <Input id={id} type={type} placeholder={placeholder}
-                    value={form[id as keyof typeof form]}
+                    value={form[id]}
                     onChange={e => setForm({ ...form, [id]: e.target.value })}
                     className="border-gold/30 focus:border-primary/60 bg-white/80"
                     required />

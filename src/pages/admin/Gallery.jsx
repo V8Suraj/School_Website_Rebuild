@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,12 +18,10 @@ import heroAbout     from "@/assets/aboutus.png";
 import schoolHome    from "@/assets/schoolhome.png";
 
 // ─── types ─────────────────────────────────────────────────────────────────────
-interface GalleryImage { id: number; src: string; label: string; category: string; }
 
-const CATS = ["Campus", "Academics", "Admissions", "Events", "Community", "Sports"] as const;
-type Cat = typeof CATS[number];
+const CATS = ["Campus", "Academics", "Admissions", "Events", "Community", "Sports"];
 
-const CAT_COLOR: Record<Cat, string> = {
+const CAT_COLOR = {
   Campus:     "bg-amber-100 text-amber-700 border-amber-200",
   Academics:  "bg-blue-100 text-blue-700 border-blue-200",
   Admissions: "bg-violet-100 text-violet-700 border-violet-200",
@@ -32,7 +30,7 @@ const CAT_COLOR: Record<Cat, string> = {
   Sports:     "bg-emerald-100 text-emerald-700 border-emerald-200",
 };
 
-const seed: GalleryImage[] = [
+const seed = [
   { id: 1, src: heroHome,       label: "Campus Life",        category: "Campus" },
   { id: 2, src: heroAcademics,  label: "Academics",          category: "Academics" },
   { id: 3, src: heroAdmissions, label: "Admissions",         category: "Admissions" },
@@ -42,19 +40,19 @@ const seed: GalleryImage[] = [
   { id: 7, src: schoolHome,     label: "School Home",        category: "Campus" },
 ];
 
-const emptyForm = { label: "", category: "Campus" as Cat, src: "", urlInput: "" };
+const emptyForm = { label: "", category: "Campus", src: "", urlInput: "" };
 
 // ─── component ─────────────────────────────────────────────────────────────────
 const AdminGallery = () => {
-  const [images, setImages]   = useState<GalleryImage[]>(seed);
-  const [filter, setFilter]   = useState<"All" | Cat>("All");
+  const [images, setImages]   = useState(seed);
+  const [filter, setFilter]   = useState("All");
   const [search, setSearch]   = useState("");
-  const [preview, setPreview] = useState<GalleryImage | null>(null);
-  const [modal, setModal]     = useState<"add" | "edit" | null>(null);
-  const [editTarget, setEditTarget] = useState<GalleryImage | null>(null);
+  const [preview, setPreview] = useState(null);
+  const [modal, setModal]     = useState(null);
+  const [editTarget, setEditTarget] = useState(null);
   const [form, setForm]       = useState(emptyForm);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const fileRef = useRef(null);
 
   // ── filtered list ──────────────────────────────────────────────────────────
   const visible = images.filter(img => {
@@ -65,14 +63,14 @@ const AdminGallery = () => {
 
   // ── handlers ──────────────────────────────────────────────────────────────
   const openAdd = () => { setEditTarget(null); setForm(emptyForm); setModal("add"); };
-  const openEdit = (img: GalleryImage) => {
+  const openEdit = (img) => {
     setEditTarget(img);
-    setForm({ label: img.label, category: img.category as Cat, src: img.src, urlInput: "" });
+    setForm({ label: img.label, category: img.category, src: img.src, urlInput: "" });
     setModal("edit");
   };
   const closeModal = () => { setModal(null); setEditTarget(null); };
 
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setForm(f => ({ ...f, src: URL.createObjectURL(file), urlInput: "" }));
@@ -94,7 +92,7 @@ const AdminGallery = () => {
     closeModal();
   };
 
-  const catColor = (cat: string) => CAT_COLOR[cat as Cat] ?? "bg-slate-100 text-slate-700 border-slate-200";
+  const catColor = (cat) => CAT_COLOR[cat] ?? "bg-slate-100 text-slate-700 border-slate-200";
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-5 max-w-7xl mx-auto">
@@ -119,8 +117,8 @@ const AdminGallery = () => {
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search images…" className="pl-9 border-gold/25 focus:border-primary/50" />
         </div>
         <div className="flex gap-1.5 flex-wrap">
-          {(["All", ...CATS] as const).map(c => (
-            <button key={c} onClick={() => setFilter(c as "All" | Cat)}
+          {(["All", ...CATS]).map(c => (
+            <button key={c} onClick={() => setFilter(c)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                 filter === c ? "bg-primary text-white border-primary" : "border-gold/30 text-muted-foreground hover:border-primary/40 hover:text-foreground"
               }`}
@@ -152,7 +150,7 @@ const AdminGallery = () => {
                   src={img.src}
                   alt={img.label}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  onError={e => { (e.target as HTMLImageElement).src = ""; }}
+                  onError={e => { (e.target).src = ""; }}
                 />
 
                 {/* gradient overlay */}

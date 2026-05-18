@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
 import { Input } from "@/components/ui/input";
@@ -9,26 +8,6 @@ import { motion } from "framer-motion";
 import { Printer, RefreshCw, FileText, ChevronDown, Globe, Languages, Loader2 } from "lucide-react";
 import { translateFields } from "@/lib/translate";
 
-type DocType = "circular" | "notice" | "certificate";
-type Lang = "en" | "hi";
-
-interface FormData {
-  docType: DocType;
-  lang: Lang;
-  refNo: string;
-  date: string;
-  to: string;
-  subject: string;
-  body: string;
-  issuedBy: string;
-  designation: string;
-  certType: string;
-  recipientName: string;
-  certBody: string;
-  certDate: string;
-  principalName: string;
-  chairmanName: string;
-}
 
 const L = {
   en: {
@@ -53,7 +32,7 @@ const L = {
   },
 };
 
-const defaultForm: FormData = {
+const defaultForm = {
   docType: "circular", lang: "en",
   refNo: "VID/2025-26/001",
   date: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" }),
@@ -69,17 +48,17 @@ const defaultForm: FormData = {
 // ─── Inline-styled preview (renders identically in browser and print) ──────────
 
 const s = {
-  page: { fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: "13px", color: "#1a1a1a", background: "#fff", padding: "40px", minHeight: "900px", position: "relative" as const, boxSizing: "border-box" as const },
-  certPage: { fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: "13px", color: "#1a1a1a", background: "linear-gradient(135deg,#fffbf0 0%,#fff8e7 50%,#fffbf0 100%)", padding: "40px", minHeight: "900px", position: "relative" as const, boxSizing: "border-box" as const },
-  outerBorder: { position: "absolute" as const, inset: "8px", border: "1px solid #fed7aa", borderRadius: "4px", pointerEvents: "none" as const },
-  innerBorder: { position: "absolute" as const, inset: "14px", border: "1px solid #ffedd5", borderRadius: "4px", pointerEvents: "none" as const },
-  certBorder1: { position: "absolute" as const, inset: "0", border: "12px solid #ffedd5", pointerEvents: "none" as const },
-  certBorder2: { position: "absolute" as const, inset: "12px", border: "2px solid #fb923c", pointerEvents: "none" as const },
-  certBorder3: { position: "absolute" as const, inset: "16px", border: "1px solid #fed7aa", pointerEvents: "none" as const },
-  watermark: { position: "absolute" as const, inset: "0", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" as const, opacity: 0.04, zIndex: 0 },
-  watermarkText: { fontSize: "120px", color: "#ea580c", transform: "rotate(-30deg)", userSelect: "none" as const, fontFamily: "'Noto Sans Devanagari', serif" },
-  content: { position: "relative" as const, zIndex: 1 },
-  headerWrap: { textAlign: "center" as const, borderBottom: "2px solid #7c2d12", paddingBottom: "16px", marginBottom: "16px" },
+  page: { fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: "13px", color: "#1a1a1a", background: "#fff", padding: "40px", minHeight: "900px", position: "relative", boxSizing: "border-box" },
+  certPage: { fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: "13px", color: "#1a1a1a", background: "linear-gradient(135deg,#fffbf0 0%,#fff8e7 50%,#fffbf0 100%)", padding: "40px", minHeight: "900px", position: "relative", boxSizing: "border-box" },
+  outerBorder: { position: "absolute", inset: "8px", border: "1px solid #fed7aa", borderRadius: "4px", pointerEvents: "none" },
+  innerBorder: { position: "absolute", inset: "14px", border: "1px solid #ffedd5", borderRadius: "4px", pointerEvents: "none" },
+  certBorder1: { position: "absolute", inset: "0", border: "12px solid #ffedd5", pointerEvents: "none" },
+  certBorder2: { position: "absolute", inset: "12px", border: "2px solid #fb923c", pointerEvents: "none" },
+  certBorder3: { position: "absolute", inset: "16px", border: "1px solid #fed7aa", pointerEvents: "none" },
+  watermark: { position: "absolute", inset: "0", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", opacity: 0.04, zIndex: 0 },
+  watermarkText: { fontSize: "120px", color: "#ea580c", transform: "rotate(-30deg)", userSelect: "none", fontFamily: "'Noto Sans Devanagari', serif" },
+  content: { position: "relative", zIndex: 1 },
+  headerWrap: { textAlign: "center", borderBottom: "2px solid #7c2d12", paddingBottom: "16px", marginBottom: "16px" },
   headerRow: { display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", marginBottom: "8px" },
   lotus: { fontSize: "28px", color: "#c2410c" },
   schoolName: { fontFamily: "'Cinzel','Georgia',serif", fontSize: "22px", fontWeight: "700", color: "#7c2d12", letterSpacing: "2px", margin: "0 0 2px" },
@@ -89,7 +68,7 @@ const s = {
   dividerLine: { flex: 1, height: "1px", background: "linear-gradient(to right, transparent, #f97316, #c2410c)" },
   dividerLineRev: { flex: 1, height: "1px", background: "linear-gradient(to left, transparent, #f97316, #c2410c)" },
   dividerSymbol: { fontSize: "11px", color: "#ea580c", fontFamily: "'Noto Sans Devanagari',serif" },
-  banner: { textAlign: "center" as const, marginBottom: "16px" },
+  banner: { textAlign: "center", marginBottom: "16px" },
   bannerSpan: { display: "inline-block", background: "#c2410c", color: "#fff", fontSize: "11px", fontWeight: "700", letterSpacing: "3px", padding: "5px 20px", borderRadius: "20px" },
   metaRow: { display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#6b7280", marginBottom: "14px" },
   label: { fontWeight: "700", color: "#374151" },
@@ -97,33 +76,33 @@ const s = {
   toValue: { fontSize: "12px", color: "#374151", marginBottom: "12px", paddingLeft: "16px" },
   subjectLine: { fontSize: "12px", marginBottom: "12px" },
   underline: { textDecoration: "underline" },
-  body: { fontSize: "12px", color: "#374151", lineHeight: "1.8", whiteSpace: "pre-wrap" as const, marginBottom: "24px", flex: 1 },
+  body: { fontSize: "12px", color: "#374151", lineHeight: "1.8", whiteSpace: "pre-wrap", marginBottom: "24px", flex: 1 },
   sigWrap: { display: "flex", justifyContent: "flex-end", marginTop: "auto" },
-  sigBox: { textAlign: "center" as const, minWidth: "160px" },
+  sigBox: { textAlign: "center", minWidth: "160px" },
   sigLine: { height: "40px", borderBottom: "1px solid #9ca3af", marginBottom: "4px" },
   sigName: { fontSize: "12px", fontWeight: "600", color: "#1f2937" },
   sigRole: { fontSize: "11px", color: "#6b7280" },
   footer: { marginTop: "24px", borderTop: "1px solid #fed7aa", paddingTop: "10px" },
   footerDivRow: { display: "flex", alignItems: "center", gap: "8px" },
-  footerText: { textAlign: "center" as const, fontSize: "9px", color: "#9ca3af", marginTop: "4px" },
-  certTitle: { textAlign: "center" as const, margin: "16px 0" },
+  footerText: { textAlign: "center", fontSize: "9px", color: "#9ca3af", marginTop: "4px" },
+  certTitle: { textAlign: "center", margin: "16px 0" },
   certTitleRow: { display: "flex", alignItems: "center", gap: "12px", justifyContent: "center", marginBottom: "4px" },
-  certTitleText: { fontFamily: "'Cinzel','Georgia',serif", fontSize: "18px", fontWeight: "700", color: "#7c2d12", letterSpacing: "3px", textTransform: "uppercase" as const },
+  certTitleText: { fontFamily: "'Cinzel','Georgia',serif", fontSize: "18px", fontWeight: "700", color: "#7c2d12", letterSpacing: "3px", textTransform: "uppercase" },
   certShloka: { fontSize: "12px", color: "#ea580c", fontFamily: "'Noto Sans Devanagari',serif" },
-  certifiedWrap: { textAlign: "center" as const, margin: "16px 0" },
-  certifiedLabel: { fontSize: "11px", color: "#9ca3af", letterSpacing: "3px", textTransform: "uppercase" as const, marginBottom: "8px" },
+  certifiedWrap: { textAlign: "center", margin: "16px 0" },
+  certifiedLabel: { fontSize: "11px", color: "#9ca3af", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "8px" },
   recipientName: { fontFamily: "'Cinzel','Georgia',serif", fontSize: "28px", fontWeight: "700", color: "#7c2d12", padding: "4px 32px", borderBottom: "1px solid #f97316", display: "inline-block" },
-  certBody: { textAlign: "center" as const, fontSize: "12px", color: "#374151", lineHeight: "1.8", padding: "0 24px", margin: "12px 0", whiteSpace: "pre-wrap" as const },
-  certDate: { textAlign: "center" as const, fontSize: "11px", color: "#6b7280", marginTop: "8px" },
+  certBody: { textAlign: "center", fontSize: "12px", color: "#374151", lineHeight: "1.8", padding: "0 24px", margin: "12px 0", whiteSpace: "pre-wrap" },
+  certDate: { textAlign: "center", fontSize: "11px", color: "#6b7280", marginTop: "8px" },
   sigsRow: { display: "flex", justifyContent: "space-between", alignItems: "flex-end", padding: "0 16px", marginTop: "auto", paddingTop: "32px" },
-  sealBox: { textAlign: "center" as const },
+  sealBox: { textAlign: "center" },
   sealCircle: { width: "56px", height: "56px", borderRadius: "50%", border: "1px solid #fed7aa", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 4px", fontSize: "10px", color: "#d1d5db", fontFamily: "'Noto Sans Devanagari',serif" },
-  cornerOrnament: { position: "absolute" as const, fontSize: "20px", color: "#fb923c", fontFamily: "'Noto Sans Devanagari',serif", pointerEvents: "none" as const },
+  cornerOrnament: { position: "absolute", fontSize: "20px", color: "#fb923c", fontFamily: "'Noto Sans Devanagari',serif", pointerEvents: "none" },
 };
 
 // ─── Preview components with fully inline styles ───────────────────────────────
 
-const Header = ({ lang }: { lang: Lang }) => {
+const Header = ({ lang }) => {
   const t = L[lang];
   return (
     <div style={s.headerWrap}>
@@ -146,7 +125,7 @@ const Header = ({ lang }: { lang: Lang }) => {
   );
 };
 
-const Footer = ({ lang }: { lang: Lang }) => {
+const Footer = ({ lang }) => {
   const t = L[lang];
   return (
     <div style={s.footer}>
@@ -160,7 +139,7 @@ const Footer = ({ lang }: { lang: Lang }) => {
   );
 };
 
-const CircularPreview = ({ f }: { f: FormData }) => {
+const CircularPreview = ({ f }) => {
   const t = L[f.lang];
   const isNotice = f.docType === "notice";
   return (
@@ -198,7 +177,7 @@ const CircularPreview = ({ f }: { f: FormData }) => {
   );
 };
 
-const CertificatePreview = ({ f }: { f: FormData }) => {
+const CertificatePreview = ({ f }) => {
   const t = L[f.lang];
   return (
     <div style={s.certPage}>
@@ -248,7 +227,7 @@ const CertificatePreview = ({ f }: { f: FormData }) => {
 };
 
 // ─── Print function — generates self-contained HTML with all styles inlined ────
-const buildPrintHTML = (f: FormData): string => {
+const buildPrintHTML = (f) => {
   const t = L[f.lang];
   const isCircular = f.docType !== "certificate";
   const isNotice = f.docType === "notice";
@@ -389,9 +368,9 @@ const buildPrintHTML = (f: FormData): string => {
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 const AdminCircular = () => {
-  const [form, setForm] = useState<FormData>(defaultForm);
+  const [form, setForm] = useState(defaultForm);
   const [translating, setTranslating] = useState(false);
-  const set = (key: keyof FormData, val: string) => setForm(f => ({ ...f, [key]: val }));
+  const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
   const isCircular = form.docType !== "certificate";
 
   // Translate all text fields in the current direction
@@ -443,7 +422,7 @@ const AdminCircular = () => {
             <div>
               <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Document Type</Label>
               <div className="grid grid-cols-3 gap-2">
-                {(["circular", "notice", "certificate"] as DocType[]).map(type => (
+                {(["circular", "notice", "certificate"]).map(type => (
                   <button key={type} onClick={() => set("docType", type)}
                     className={`py-2.5 rounded-xl text-sm font-semibold capitalize border transition-all ${
                       form.docType === type ? "bg-primary text-white border-primary shadow-gold" : "border-gold/25 text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -456,7 +435,7 @@ const AdminCircular = () => {
                 <Globe className="h-3.5 w-3.5" /> Language / भाषा
               </Label>
               <div className="grid grid-cols-2 gap-2">
-                {([["en", "English"], ["hi", "हिंदी"]] as [Lang, string][]).map(([val, label]) => (
+                {([["en", "English"], ["hi", "हिंदी"]]).map(([val, label]) => (
                   <button key={val} onClick={() => set("lang", val)}
                     className={`py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                       form.lang === val ? "bg-primary text-white border-primary shadow-gold" : "border-gold/25 text-muted-foreground hover:border-primary/40 hover:text-foreground"

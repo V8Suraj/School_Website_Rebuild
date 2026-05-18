@@ -11,10 +11,9 @@ import {
 } from "lucide-react";
 
 // ─── config ────────────────────────────────────────────────────────────────────
-const CATEGORIES = ["Exam", "Result", "Holiday", "Meeting", "Event", "Leave"] as const;
-type Category = typeof CATEGORIES[number];
+const CATEGORIES = ["Exam", "Result", "Holiday", "Meeting", "Event", "Leave"];
 
-const CAT_CFG: Record<Category, { gradient: string; light: string; text: string; border: string; dot: string }> = {
+const CAT_CFG = {
   Exam:    { gradient: "from-red-500 to-rose-500",       light: "bg-red-50",     text: "text-red-700",     border: "border-red-200",    dot: "bg-red-500" },
   Result:  { gradient: "from-blue-500 to-indigo-500",    light: "bg-blue-50",    text: "text-blue-700",    border: "border-blue-200",   dot: "bg-blue-500" },
   Holiday: { gradient: "from-emerald-500 to-teal-500",   light: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200",dot: "bg-emerald-500" },
@@ -23,12 +22,8 @@ const CAT_CFG: Record<Category, { gradient: string; light: string; text: string;
   Leave:   { gradient: "from-orange-500 to-amber-500",   light: "bg-orange-50",  text: "text-orange-700",  border: "border-orange-200", dot: "bg-orange-500" },
 };
 
-interface CalEvent {
-  id: number; title: string; date: string; endDate?: string;
-  category: Category; description: string; location?: string;
-}
 
-const seed: CalEvent[] = [
+const seed = [
   { id: 1, title: "Term 2 Exams Begin",      date: "2026-02-10", endDate: "2026-02-20", category: "Exam",    description: "Term 2 examinations for all classes.",        location: "School Campus" },
   { id: 2, title: "Term 1 Results",          date: "2026-01-20", category: "Result",   description: "Term 1 results distributed to students.",          location: "Classrooms" },
   { id: 3, title: "Republic Day",            date: "2026-01-26", category: "Holiday",  description: "National holiday — flag hoisting & cultural show." },
@@ -37,13 +32,13 @@ const seed: CalEvent[] = [
   { id: 6, title: "Summer Vacation",         date: "2026-04-25", endDate: "2026-06-10",category: "Leave",   description: "Summer vacation for all students." },
 ];
 
-const emptyForm = { title: "", date: "", endDate: "", category: "Event" as Category, description: "", location: "" };
+const emptyForm = { title: "", date: "", endDate: "", category: "Event", description: "", location: "" };
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
-const fmtDate = (d: string) =>
+const fmtDate = (d) =>
   new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
-const MonthDay = ({ date }: { date: string }) => {
+const MonthDay = ({ date }) => {
   const d = new Date(date);
   return (
     <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-gold/10 border border-gold/25 text-center">
@@ -57,16 +52,16 @@ const MonthDay = ({ date }: { date: string }) => {
 
 // ─── component ─────────────────────────────────────────────────────────────────
 const AdminCalendarEvents = () => {
-  const [items, setItems]         = useState<CalEvent[]>(seed);
-  const [modal, setModal]         = useState<"add" | "edit" | null>(null);
-  const [editing, setEditing]     = useState<CalEvent | null>(null);
+  const [items, setItems]         = useState(seed);
+  const [modal, setModal]         = useState(null);
+  const [editing, setEditing]     = useState(null);
   const [form, setForm]           = useState(emptyForm);
-  const [filter, setFilter]       = useState<"All" | Category>("All");
+  const [filter, setFilter]       = useState("All");
   const [search, setSearch]       = useState("");
-  const [deleteId, setDeleteId]   = useState<number | null>(null);
+  const [deleteId, setDeleteId]   = useState(null);
 
   const openAdd  = () => { setEditing(null); setForm(emptyForm); setModal("add"); };
-  const openEdit = (e: CalEvent) => {
+  const openEdit = (e) => {
     setEditing(e);
     setForm({ title: e.title, date: e.date, endDate: e.endDate ?? "", category: e.category, description: e.description, location: e.location ?? "" });
     setModal("edit");
@@ -102,12 +97,12 @@ const AdminCalendarEvents = () => {
           />
         </div>
         <div className="flex gap-1.5 flex-wrap">
-          {(["All", ...CATEGORIES] as const).map(c => {
+          {(["All", ...CATEGORIES]).map(c => {
             const cfg = c !== "All" ? CAT_CFG[c] : null;
             return (
               <button
                 key={c}
-                onClick={() => setFilter(c as "All" | Category)}
+                onClick={() => setFilter(c)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                   filter === c
                     ? "bg-primary text-white border-primary"
@@ -167,7 +162,7 @@ const AdminCalendarEvents = () => {
                   <div className="space-y-1.5">
                     <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Category</Label>
                     <select className="w-full h-10 border border-gold/25 rounded-lg px-3 text-sm bg-background focus:border-primary/50 focus:outline-none"
-                      value={form.category} onChange={e => setForm({ ...form, category: e.target.value as Category })}>
+                      value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
                       {CATEGORIES.map(c => <option key={c}>{c}</option>)}
                     </select>
                   </div>
