@@ -7,26 +7,25 @@ import { FileText, Download, AlertTriangle, Building2, School } from "lucide-rea
 import heroNotices from "@/assets/notice.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-type Category = "All" | "School Notice" | "Government Notice" | "Urgent Notice";
-
 const CATEGORY_CONFIG = {
   "School Notice":     { color: "bg-blue-100 text-blue-700 border-blue-200",   icon: School,        badge: "bg-blue-50 text-blue-700" },
   "Government Notice": { color: "bg-green-100 text-green-700 border-green-200", icon: Building2,     badge: "bg-green-50 text-green-700" },
   "Urgent Notice":     { color: "bg-red-100 text-red-700 border-red-200",       icon: AlertTriangle, badge: "bg-red-50 text-red-700" },
 };
 
-const filters: { value: Category; key: "notices.filterAll" | "notices.filterSchool" | "notices.filterGovt" | "notices.filterUrgent" }[] = [
-  { value: "All",               key: "notices.filterAll" },
-  { value: "School Notice",     key: "notices.filterSchool" },
+const filters = [
+  { value: "All", key: "notices.filterAll" },
+  { value: "School Notice", key: "notices.filterSchool" },
   { value: "Government Notice", key: "notices.filterGovt" },
-  { value: "Urgent Notice",     key: "notices.filterUrgent" },
+  { value: "Urgent Notice", key: "notices.filterUrgent" },
 ];
 
 const Notices = () => {
   const { t, language } = useLanguage();
-  const [filter, setFilter] = useState<Category>("All");
+  const [filter, setFilter] = useState("All");
 
-  const filtered = filter === "All" ? notices : notices.filter(n => n.category === filter);
+  const filtered =
+    filter === "All" ? notices : notices.filter(n => n.category === filter);
 
   return (
     <>
@@ -65,6 +64,7 @@ const Notices = () => {
           {filtered.map((notice, i) => {
             const config = CATEGORY_CONFIG[notice.category];
             const Icon = config.icon;
+
             return (
               <motion.div
                 key={notice.id}
@@ -76,29 +76,42 @@ const Notices = () => {
               >
                 {/* coloured left bar */}
                 <div className="flex items-start gap-4 p-5 md:p-6">
-                  <div className={`p-3 rounded-xl border shrink-0 ${config.color} group-hover:scale-105 transition-transform duration-300`}>
+                  <div
+                    className={`p-3 rounded-xl border shrink-0 ${config.color} group-hover:scale-105 transition-transform duration-300`}
+                  >
                     <Icon className="h-5 w-5" />
                   </div>
+
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1.5">
                       <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${config.badge}`}>
                         {notice.category}
                       </span>
-                      <span className="text-xs text-muted-foreground">{notice.date}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {notice.date}
+                      </span>
                     </div>
+
                     <h3 className="font-display text-lg text-secondary leading-snug">
                       {language === "hi" && notice.titleHi ? notice.titleHi : notice.title}
                     </h3>
+
                     <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
                       {language === "hi" && notice.bodyHi ? notice.bodyHi : notice.body}
                     </p>
+
                     {notice.attachment && (
-                      <a href={notice.attachment} target="_blank" rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 mt-3 text-sm text-primary hover:underline font-medium">
+                      <a
+                        href={notice.attachment}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 mt-3 text-sm text-primary hover:underline font-medium"
+                      >
                         <Download className="h-3.5 w-3.5" /> {t("notices.download")}
                       </a>
                     )}
                   </div>
+
                   <FileText className="h-4 w-4 text-muted-foreground/30 shrink-0 hidden md:block mt-1" />
                 </div>
               </motion.div>
@@ -107,7 +120,9 @@ const Notices = () => {
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 text-muted-foreground">{t("notices.noNotices")}</div>
+          <div className="text-center py-16 text-muted-foreground">
+            {t("notices.noNotices")}
+          </div>
         )}
       </section>
     </>
