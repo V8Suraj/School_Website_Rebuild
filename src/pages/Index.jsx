@@ -1,5 +1,4 @@
  
-
 import { Link } from "react-router-dom";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -8,9 +7,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { MandalaBg } from "@/components/MandalaBg";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
-import {
-  BookOpen, FlaskConical, Palette, Trophy, Award, Sparkles, ArrowRight,
-  Megaphone, FileText, Wallet, CalendarDays, Star, ChevronRight, Users,
+import { 
 } from "lucide-react";
 import heroHome from "@/assets/hero-home.jpg";
 import heroVideo from "@/assets/herosection.mp4";
