@@ -2,22 +2,6 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState, useEffect } from "react";
 
-interface PageHeroProps {
-  title: string;
-  sanskrit?: string;
-  subtitle?: string;
-  image: string;
-  video?: string;
-  mobileImage?: string;
-  align?: "center" | "left";
-  imageFit?: "cover" | "contain";
-  imagePosition?: string;
-  size?: "default" | "compact" | "full";
-  children?: React.ReactNode;
-  preloaderBgImage?: string; // New prop for preloader background
-  horseImage?: string; // New prop for horse image
-}
-
 export const PageHero = ({ 
   title, 
   sanskrit, 
@@ -32,7 +16,7 @@ export const PageHero = ({
   children,
   preloaderBgImage,
   horseImage
-}: PageHeroProps) => {
+}) => {
   const { language } = useLanguage();
   const isHindi = language === "hi";
   const [showMainContent, setShowMainContent] = useState(!video || !preloaderBgImage || !horseImage);
@@ -48,14 +32,56 @@ export const PageHero = ({
     }
   }, [video, preloaderBgImage, horseImage]);
 
+  // Responsive height based on screen size
+  const getSectionHeight = () => {
+    if (size === "full") {
+      return "min-h-[70vh] sm:min-h-[75vh] md:min-h-[80vh] lg:min-h-[82vh] xl:min-h-[85vh]";
+    } else if (size === "compact") {
+      return "min-h-[50vh] sm:min-h-[55vh] md:min-h-[60vh] lg:min-h-[68vh]";
+    } else {
+      return "min-h-[60vh] sm:min-h-[65vh] md:min-h-[70vh] lg:min-h-[75vh]";
+    }
+  };
+
+  // Responsive text sizes
+  const getTitleSize = () => {
+    if (size === "compact") {
+      return "text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.4rem]";
+    } else {
+      return "text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4rem]";
+    }
+  };
+
+  const getSanskritSize = () => {
+    return "text-sm sm:text-base md:text-xl lg:text-2xl";
+  };
+
+  const getSubtitleSize = () => {
+    if (size === "compact") {
+      return "text-xs sm:text-sm md:text-base lg:text-xl";
+    } else {
+      return "text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl";
+    }
+  };
+
+  // Responsive padding
+  const getPadding = () => {
+    if (size === "compact") {
+      return "py-6 sm:py-8 md:py-10 lg:py-12";
+    } else if (size === "full") {
+      return "py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20";
+    } else {
+      return "py-8 sm:py-10 md:py-12 lg:py-14 xl:py-16";
+    }
+  };
+
+  // Horse image size for responsive
+  const getHorseSize = () => {
+    return "max-w-[150px] sm:max-w-[200px] md:max-w-[250px] lg:max-w-[300px]";
+  };
+
   return (
-    <section className={`relative w-full overflow-hidden bg-gradient-temple flex items-center ${
-      size === "full"
-        ? "min-h-[80svh] md:min-h-[82vh]"
-        : size === "compact"
-        ? "min-h-[65vh] md:min-h-[68vh]"
-        : "min-h-[72vh] md:min-h-[75vh]"
-    }`}>
+    <section className={`relative w-full overflow-hidden bg-gradient-temple flex items-center ${getSectionHeight()}`}>
       
       {/* Background - Show preloader or main content */}
       <div className="absolute inset-0 w-full h-full">
@@ -71,7 +97,7 @@ export const PageHero = ({
             />
             
             {/* Dark overlay for preloader */}
-            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-black/50 sm:bg-black/60" />
             
             {/* Horse animation - coming from right side */}
             <div className="absolute inset-0 overflow-hidden">
@@ -79,8 +105,7 @@ export const PageHero = ({
                 <img
                   src={horseImage}
                   alt="Horse"
-                  className="h-auto max-h-[80vh] w-auto object-contain"
-                  style={{ maxWidth: "300px" }}
+                  className={`h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[80vh] w-auto object-contain ${getHorseSize()}`}
                 />
               </div>
             </div>
@@ -109,7 +134,7 @@ export const PageHero = ({
             ) : imageFit === "contain" ? (
               /* For contain: use CSS background so the full image shows without cropping */
               <div
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full bg-no-repeat"
                 style={{
                   backgroundImage: `url(${image})`,
                   backgroundSize: "contain",
@@ -120,7 +145,8 @@ export const PageHero = ({
               />
             ) : mobileImage ? (
               <picture className="absolute inset-0 h-full w-full">
-                <source media="(max-width: 767px)" srcSet={mobileImage} />
+                <source media="(max-width: 640px)" srcSet={mobileImage} />
+                <source media="(max-width: 768px)" srcSet={mobileImage} />
                 <img
                   src={image}
                   alt=""
@@ -135,34 +161,40 @@ export const PageHero = ({
                 alt=""
                 aria-hidden
                 style={{ objectPosition: imagePosition }}
-                className="absolute inset-0 h-full w-full object-cover object-[center_30%] opacity-90 animate-fade-in"
+                className="absolute inset-0 h-full w-full object-cover opacity-90 animate-fade-in"
               />
             )}
-            {/* Dark scrim */}
-            <div className={`absolute inset-0 ${imageFit === "contain" && !video ? "bg-black/50" : "bg-black/55"}`} />
+            {/* Dark scrim - responsive opacity */}
+            <div className={`absolute inset-0 ${imageFit === "contain" && !video ? "bg-black/40 sm:bg-black/50" : "bg-black/45 sm:bg-black/55"}`} />
             {/* Warm gradient overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(160deg,hsl(20_60%_10%/0.65)_0%,hsl(20_40%_12%/0.35)_60%,transparent_100%)]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/20 sm:bg-[linear-gradient(160deg,hsl(20_60%_10%/0.65)_0%,hsl(20_40%_12%/0.35)_60%,transparent_100%)]" />
             {/* Festive radial glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(22_88%_52%/0.15),transparent_55%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(22_88%_52%/0.1),transparent_55%)] sm:bg-[radial-gradient(circle_at_30%_50%,hsl(22_88%_52%/0.15),transparent_55%)]" />
           </>
         )}
       </div>
 
       {/* Content - Only show when main content is ready */}
       {showMainContent && (
-        <div className={`container-narrow relative w-full z-10 ${size === "compact" ? "py-8 md:py-12" : size === "full" ? "py-14 md:py-20" : "py-10 md:py-16"} ${align === "center" ? "text-center" : ""}`}>
+        <div className={`container-narrow relative w-full z-10 ${getPadding()} ${align === "center" ? "text-center" : ""}`}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className={`max-w-3xl px-1 md:px-0 ${align === "center" ? "mx-auto" : ""}`}
+            className={`w-full px-2 sm:px-4 md:px-6 ${
+              align === "center" ? "mx-auto text-center" : ""
+            } ${
+              size === "compact" 
+                ? "max-w-2xl sm:max-w-3xl md:max-w-4xl" 
+                : "max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl"
+            }`}
           >
             {sanskrit && (
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                className="font-sanskrit text-base md:text-2xl tracking-wide text-gold mb-3 drop-shadow-[0_2px_8px_hsl(20_40%_12%/0.6)]"
+                className={`font-sanskrit ${getSanskritSize()} tracking-wide text-gold mb-2 sm:mb-3 md:mb-4 drop-shadow-[0_2px_8px_hsl(20_40%_12%/0.6)] break-words`}
               >
                 {sanskrit}
               </motion.div>
@@ -171,10 +203,8 @@ export const PageHero = ({
             <h1
               className={`font-bold drop-shadow-[0_10px_24px_hsl(20_40%_12%/0.62)] ${
                 isHindi ? "font-sanskrit" : "font-display"
-              } ${
-                size === "compact" ? "text-2xl md:text-5xl lg:text-[3.4rem]" : "text-3xl md:text-6xl lg:text-[4rem]"
-              }`}
-              style={{ lineHeight: isHindi ? 1.45 : 1.2 }}
+              } ${getTitleSize()} break-words`}
+              style={{ lineHeight: isHindi ? 1.4 : 1.2 }}
             >
               {isHindi ? (
                 <span
@@ -183,8 +213,8 @@ export const PageHero = ({
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                    display: "inline",
-                    paddingTop: "0.15em",
+                    display: "inline-block",
+                    paddingTop: "0.1em",
                     paddingBottom: "0.05em",
                   }}
                 >
@@ -194,8 +224,7 @@ export const PageHero = ({
                 <span
                   className="bg-clip-text text-transparent inline-block pb-1"
                   style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, hsl(43 95% 86%) 0%, hsl(38 90% 68%) 28%, hsl(22 88% 58%) 55%, hsl(43 95% 86%) 100%)",
+                    backgroundImage: "linear-gradient(90deg, hsl(43 95% 86%) 0%, hsl(38 90% 68%) 28%, hsl(22 88% 58%) 55%, hsl(43 95% 86%) 100%)",
                   }}
                 >
                   {title}
@@ -203,16 +232,16 @@ export const PageHero = ({
               )}
             </h1>
 
-            {/* Animated divider */}
+            {/* Animated divider - responsive sizing */}
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className={`${isHindi ? "mt-2" : "mt-4"} flex items-center gap-3 ${align === "center" ? "justify-center" : ""}`}
+              className={`${isHindi ? "mt-1 sm:mt-2" : "mt-3 sm:mt-4"} flex items-center gap-2 sm:gap-3 ${align === "center" ? "justify-center" : ""}`}
             >
-              <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold" />
-              <span className="text-gold animate-flame text-lg">✦</span>
-              <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold" />
+              <span className="h-px w-8 sm:w-10 md:w-12 bg-gradient-to-r from-transparent to-gold" />
+              <span className="text-gold animate-flame text-base sm:text-lg md:text-xl">✦</span>
+              <span className="h-px w-8 sm:w-10 md:w-12 bg-gradient-to-l from-transparent to-gold" />
             </motion.div>
 
             {subtitle && (
@@ -222,9 +251,9 @@ export const PageHero = ({
                 transition={{ delay: 0.5, duration: 0.7 }}
                 className={`font-display text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.9)] tracking-wide ${
                   size === "compact"
-                    ? `${isHindi ? "mt-2 font-sanskrit" : "mt-3"} text-base md:text-xl`
-                    : `${isHindi ? "mt-3 font-sanskrit" : "mt-5"} text-lg md:text-2xl font-medium`
-                }`}
+                    ? `${isHindi ? "mt-1 sm:mt-2 font-sanskrit" : "mt-2 sm:mt-3"} ${getSubtitleSize()}`
+                    : `${isHindi ? "mt-2 sm:mt-3 font-sanskrit" : "mt-3 sm:mt-4 md:mt-5"} ${getSubtitleSize()} font-medium`
+                } break-words px-2 sm:px-4`}
               >
                 {subtitle}
               </motion.p>
@@ -235,7 +264,7 @@ export const PageHero = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.6 }}
-                className={`mt-6 flex flex-wrap gap-4 overflow-x-clip ${align === "center" ? "justify-center" : ""}`}
+                className={`mt-4 sm:mt-5 md:mt-6 flex flex-wrap gap-2 sm:gap-3 md:gap-4 overflow-x-clip px-2 sm:px-0 ${align === "center" ? "justify-center" : ""}`}
               >
                 {children}
               </motion.div>
@@ -245,4 +274,4 @@ export const PageHero = ({
       )}
     </section>
   );
-};
+}; 

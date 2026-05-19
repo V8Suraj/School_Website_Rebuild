@@ -9,14 +9,7 @@ import {
   User, Mail, Phone, GraduationCap, Calendar, ChevronDown,
 } from "lucide-react";
 
-type Status = "Pending" | "Reviewed" | "Accepted" | "Rejected";
-
-interface Application {
-  id: number; studentName: string; grade: string; parentName: string;
-  email: string; phone: string; date: string; status: Status;
-}
-
-const seed: Application[] = [
+const seed = [
   { id: 1, studentName: "Arjun Mehta",  grade: "Class VI",  parentName: "Suresh Mehta",  email: "suresh@example.com",  phone: "9876543210", date: "2026-01-12", status: "Pending" },
   { id: 2, studentName: "Priya Singh",  grade: "Class IX",  parentName: "Kavita Singh",  email: "kavita@example.com",  phone: "9123456789", date: "2026-01-10", status: "Reviewed" },
   { id: 3, studentName: "Rohan Patel",  grade: "Class I",   parentName: "Amit Patel",    email: "amit@example.com",    phone: "9988776655", date: "2026-01-08", status: "Accepted" },
@@ -24,7 +17,7 @@ const seed: Application[] = [
   { id: 5, studentName: "Karan Gupta",  grade: "Class III", parentName: "Neha Gupta",    email: "neha@example.com",    phone: "9765432100", date: "2026-01-05", status: "Pending" },
 ];
 
-const STATUS_CONFIG: Record<Status, { bg: string; text: string; icon: typeof Clock; dot: string }> = {
+const STATUS_CONFIG = {
   Pending:  { bg: "bg-amber-50",  text: "text-amber-700",  icon: Clock,         dot: "bg-amber-400" },
   Reviewed: { bg: "bg-blue-50",   text: "text-blue-700",   icon: FileSearch,    dot: "bg-blue-400" },
   Accepted: { bg: "bg-green-50",  text: "text-green-700",  icon: CheckCircle2,  dot: "bg-green-500" },
@@ -32,19 +25,19 @@ const STATUS_CONFIG: Record<Status, { bg: string; text: string; icon: typeof Clo
 };
 
 const STAT_CARDS = [
-  { status: "Pending"  as Status, label: "Pending",  color: "from-amber-400 to-orange-500",  icon: Clock },
-  { status: "Reviewed" as Status, label: "Reviewed", color: "from-blue-500 to-indigo-500",   icon: FileSearch },
-  { status: "Accepted" as Status, label: "Accepted", color: "from-emerald-500 to-teal-500",  icon: CheckCircle2 },
-  { status: "Rejected" as Status, label: "Rejected", color: "from-rose-500 to-red-500",      icon: XCircle },
+  { status: "Pending", label: "Pending",  color: "from-amber-400 to-orange-500",  icon: Clock },
+  { status: "Reviewed", label: "Reviewed", color: "from-blue-500 to-indigo-500",   icon: FileSearch },
+  { status: "Accepted", label: "Accepted", color: "from-emerald-500 to-teal-500",  icon: CheckCircle2 },
+  { status: "Rejected", label: "Rejected", color: "from-rose-500 to-red-500",      icon: XCircle },
 ];
 
 const AdminAdmissions = () => {
-  const [apps, setApps] = useState<Application[]>(seed);
-  const [selected, setSelected] = useState<Application | null>(null);
+  const [apps, setApps] = useState(seed);
+  const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState<Status | "All">("All");
+  const [filterStatus, setFilterStatus] = useState("All");
 
-  const updateStatus = (id: number, status: Status) => {
+  const updateStatus = (id, status) => {
     setApps(apps.map(a => a.id === id ? { ...a, status } : a));
     if (selected?.id === id) setSelected(prev => prev ? { ...prev, status } : null);
   };
@@ -121,11 +114,11 @@ const AdminAdmissions = () => {
             <div className="relative">
               <select
                 value={filterStatus}
-                onChange={e => setFilterStatus(e.target.value as Status | "All")}
+                onChange={e => setFilterStatus(e.target.value)}
                 className="h-8 pl-3 pr-7 text-sm rounded-lg border border-gold/25 bg-background focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
               >
                 <option value="All">All Status</option>
-                {(["Pending", "Reviewed", "Accepted", "Rejected"] as Status[]).map(s => (
+                {["Pending", "Reviewed", "Accepted", "Rejected"].map(s => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>

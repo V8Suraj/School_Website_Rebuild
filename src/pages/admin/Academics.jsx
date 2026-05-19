@@ -10,10 +10,6 @@ import {
   GraduationCap, Save, CheckCircle2, Layers, ChevronRight, Check,
 } from "lucide-react";
 
-interface Department { id: number; name: string; description: string; }
-
-type SectionKey = "overview" | "curriculum" | "departments" | null;
-
 const DEPT_COLORS = [
   "from-amber-500 to-orange-500",
   "from-blue-500 to-indigo-500",
@@ -24,8 +20,8 @@ const DEPT_COLORS = [
 ];
 
 const AdminAcademics = () => {
-  const [activeSection, setActiveSection] = useState<SectionKey>(null);
-  const [savedSection, setSavedSection] = useState<SectionKey>(null);
+  const [activeSection, setActiveSection] = useState(null);
+  const [savedSection, setSavedSection] = useState(null);
 
   // overview stats (editable)
   const [stats, setStats] = useState({
@@ -43,24 +39,24 @@ const AdminAcademics = () => {
   );
 
   // departments
-  const [departments, setDepartments] = useState<Department[]>([
+  const [departments, setDepartments] = useState([
     { id: 1, name: "Science & Technology", description: "Physics, Chemistry, Biology, Computer Science with fully equipped labs." },
     { id: 2, name: "Humanities & Arts",    description: "History, Geography, Political Science, Fine Arts, and Sanskrit." },
     { id: 3, name: "Commerce",             description: "Accountancy, Business Studies, Economics, and Entrepreneurship." },
   ]);
   const [deptForm, setDeptForm] = useState({ name: "", description: "" });
-  const [editingDept, setEditingDept] = useState<Department | null>(null);
+  const [editingDept, setEditingDept] = useState(null);
   const [showDeptForm, setShowDeptForm] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState(null);
 
-  const saveSection = (key: SectionKey) => {
+  const saveSection = (key) => {
     setSavedSection(key);
     setActiveSection(null);
     setTimeout(() => setSavedSection(null), 2000);
   };
 
   const openAddDept = () => { setEditingDept(null); setDeptForm({ name: "", description: "" }); setShowDeptForm(true); };
-  const openEditDept = (d: Department) => { setEditingDept(d); setDeptForm({ name: d.name, description: d.description }); setShowDeptForm(true); };
+  const openEditDept = (d) => { setEditingDept(d); setDeptForm({ name: d.name, description: d.description }); setShowDeptForm(true); };
   const handleSaveDept = () => {
     if (!deptForm.name.trim()) return;
     if (editingDept) setDepartments(prev => prev.map(d => d.id === editingDept.id ? { ...editingDept, ...deptForm } : d));
@@ -71,9 +67,6 @@ const AdminAcademics = () => {
   // ── reusable section card ─────────────────────────────────────────────────
   const SectionCard = ({
     id, icon: Icon, iconColor, title, summary, children,
-  }: {
-    id: SectionKey; icon: React.ElementType; iconColor: string;
-    title: string; summary: string; children: React.ReactNode;
   }) => {
     const isOpen = activeSection === id;
     const wasSaved = savedSection === id;
@@ -128,7 +121,7 @@ const AdminAcademics = () => {
                   <Icon className="h-3.5 w-3.5" /> {label}
                 </Label>
                 <Input
-                  value={stats[key as keyof typeof stats]}
+                  value={stats[key]}
                   onChange={e => setStats({ ...stats, [key]: e.target.value })}
                   className="border-gold/25 focus:border-primary/50"
                 />

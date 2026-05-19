@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,16 +9,11 @@ import {
   Pencil, Check, X, ChevronRight, Languages, Loader2,
   BookOpen, Eye, Star, User, Building2, Save, GraduationCap, Plus, Trash2,
 } from "lucide-react";
-import { defaultFacilities, loadAboutFacilities, saveAboutFacilities, loadAboutContent, saveAboutContent, defaultAboutContent, type AboutFacility, type AboutContent, defaultFaculty, loadAboutFaculty, saveAboutFaculty, type AboutFaculty } from "@/lib/aboutContent";
+import { defaultFacilities, loadAboutFacilities, saveAboutFacilities, loadAboutContent, saveAboutContent, defaultAboutContent, defaultFaculty, loadAboutFaculty, saveAboutFaculty } from "@/lib/aboutContent";
 import { translateFields } from "@/lib/translate";
 
-type SectionKey = "history" | "missionVision" | "principal" | "facilities" | "faculty" | null;
-
 // ─── Hindi preview block ───────────────────────────────────────────────────────
-const HindiBlock = ({ fields, onChange }: {
-  fields: { label: string; key: string; value: string; rows?: number }[];
-  onChange: (key: string, val: string) => void;
-}) => (
+const HindiBlock = ({ fields, onChange }) => (
   <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 space-y-3">
     <div className="flex items-center gap-2 text-xs font-semibold text-violet-700 uppercase tracking-wide">
       <Languages className="h-3.5 w-3.5" /> Hindi Translation (editable)
@@ -40,12 +35,12 @@ const HindiBlock = ({ fields, onChange }: {
 
 // ─── component ─────────────────────────────────────────────────────────────────
 const AdminAbout = () => {
-  const [activeSection, setActiveSection] = useState<SectionKey>(null);
-  const [saved, setSaved]                 = useState<SectionKey>(null);
-  const [form, setForm]                   = useState<AboutContent>(defaultAboutContent);
-  const [facilities, setFacilities]       = useState<AboutFacility[]>(defaultFacilities);
-  const [faculty, setFaculty]             = useState<AboutFaculty[]>(defaultFaculty);
-  const [translating, setTranslating]     = useState<SectionKey>(null);
+  const [activeSection, setActiveSection] = useState(null);
+  const [saved, setSaved]                 = useState(null);
+  const [form, setForm]                   = useState(defaultAboutContent);
+  const [facilities, setFacilities]       = useState(defaultFacilities);
+  const [faculty, setFaculty]             = useState(defaultFaculty);
+  const [translating, setTranslating]     = useState(null);
 
   useEffect(() => {
     setFacilities(loadAboutFacilities());
@@ -53,9 +48,9 @@ const AdminAbout = () => {
     setForm(f => ({ ...f, ...loadAboutContent() }));
   }, []);
 
-  const set = (key: keyof AboutContent, val: string) => setForm(f => ({ ...f, [key]: val }));
+  const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
-  const saveSection = (key: SectionKey) => {
+  const saveSection = (key) => {
     if (key === "facilities") {
       const clean = facilities
         .map(f => ({ title: f.title.trim(), desc: f.desc.trim(), image: f.image.trim() }))
@@ -74,24 +69,24 @@ const AdminAbout = () => {
     setTimeout(() => setSaved(null), 2000);
   };
 
-  const translate = async (key: SectionKey, fields: Record<string, string>, hiKeys: Record<string, keyof AboutContent>) => {
+  const translate = async (key, fields, hiKeys) => {
     setTranslating(key);
     const result = await translateFields(fields);
     setForm(f => {
-      const updates: Partial<AboutContent> = {};
-      for (const [k, hiKey] of Object.entries(hiKeys)) updates[hiKey as keyof AboutContent] = result[k] ?? "";
+      const updates = {};
+      for (const [k, hiKey] of Object.entries(hiKeys)) updates[hiKey] = result[k] ?? "";
       return { ...f, ...updates };
     });
     setTranslating(null);
   };
 
-  const updateFacility = (i: number, field: keyof AboutFacility, value: string) =>
+  const updateFacility = (i, field, value) =>
     setFacilities(prev => prev.map((f, idx) => idx === i ? { ...f, [field]: value } : f));
 
-  const updateFacultyMember = (i: number, field: keyof AboutFaculty, value: string) =>
+  const updateFacultyMember = (i, field, value) =>
     setFaculty(prev => prev.map((f, idx) => idx === i ? { ...f, [field]: value } : f));
 
-  const handleImageUpload = (i: number, e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (i, e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -103,9 +98,6 @@ const AdminAbout = () => {
   // ── section card ─────────────────────────────────────────────────────────
   const SectionCard = ({
     id, icon: Icon, iconColor, title, summary, children,
-  }: {
-    id: SectionKey; icon: React.ElementType; iconColor: string;
-    title: string; summary: string; children: React.ReactNode;
   }) => {
     const isOpen   = activeSection === id;
     const wasSaved = saved === id;
@@ -154,7 +146,7 @@ const AdminAbout = () => {
   };
 
   // ── translate button ──────────────────────────────────────────────────────
-  const TranslateBtn = ({ sectionKey, onClick }: { sectionKey: SectionKey; onClick: () => void }) => (
+  const TranslateBtn = ({ sectionKey, onClick }) => (
     <Button type="button" onClick={onClick} disabled={translating === sectionKey}
       variant="outline" size="sm"
       className="gap-1.5 border-violet-300 text-violet-700 hover:bg-violet-50 w-fit"
@@ -191,7 +183,7 @@ const AdminAbout = () => {
                 { label: "School History", key: "historyHi", value: form.historyHi, rows: 4 },
                 { label: "Core Values", key: "valuesHi", value: form.valuesHi },
               ]}
-              onChange={(k, v) => set(k as keyof AboutContent, v)}
+              onChange={(k, v) => set(k, v)}
             />
           )}
         </SectionCard>
@@ -219,7 +211,7 @@ const AdminAbout = () => {
                 { label: "Mission", key: "missionHi", value: form.missionHi, rows: 3 },
                 { label: "Vision",  key: "visionHi",  value: form.visionHi,  rows: 3 },
               ]}
-              onChange={(k, v) => set(k as keyof AboutContent, v)}
+              onChange={(k, v) => set(k, v)}
             />
           )}
         </SectionCard>
@@ -254,7 +246,7 @@ const AdminAbout = () => {
                 { label: "Principal Name", key: "principalNameHi",    value: form.principalNameHi },
                 { label: "Message",        key: "principalMessageHi", value: form.principalMessageHi, rows: 4 },
               ]}
-              onChange={(k, v) => set(k as keyof AboutContent, v)}
+              onChange={(k, v) => set(k, v)}
             />
           )}
         </SectionCard>

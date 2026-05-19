@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef } from "react";
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,16 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Pencil, Trash2, X, Megaphone, Save, Plus, Search, Calendar, Paperclip, ExternalLink, Upload, Languages, Loader2 } from "lucide-react";
 import { translateFields } from "@/lib/translate";
 
-interface Announcement {
-  id: number; title: string; body: string;
-  titleHi?: string; bodyHi?: string;
-  date: string; category: string;
-  attachment?: string; attachmentName?: string;
-}
+const CATS = ["General", "Exam", "Event", "Holiday", "Urgent"];
 
-const CATS = ["General", "Exam", "Event", "Holiday", "Urgent"] as const;
-
-const CAT_CFG: Record<string, { bg: string; text: string; border: string; dot: string }> = {
+const CAT_CFG = {
   General: { bg: "bg-slate-100",  text: "text-slate-700",  border: "border-slate-200",  dot: "bg-slate-400" },
   Exam:    { bg: "bg-blue-100",   text: "text-blue-700",   border: "border-blue-200",   dot: "bg-blue-500" },
   Event:   { bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200", dot: "bg-purple-500" },
@@ -25,7 +18,7 @@ const CAT_CFG: Record<string, { bg: string; text: string; border: string; dot: s
   Urgent:  { bg: "bg-red-100",    text: "text-red-700",    border: "border-red-200",    dot: "bg-red-500" },
 };
 
-const seed: Announcement[] = [
+const seed = [
   { id: 1, title: "Annual Sports Day",        body: "Annual Sports Day will be held on 15th Feb 2026. All students must report in sports uniform by 7:30 AM.",  date: "2026-01-10", category: "Event" },
   { id: 2, title: "Exam Schedule Released",   body: "Term 2 exam schedule is now available. Download the timetable from the Academics section.",                date: "2026-01-08", category: "Exam",    attachment: "https://example.com/exam-schedule.pdf", attachmentName: "Exam Schedule.pdf" },
   { id: 3, title: "Republic Day Celebration", body: "School will celebrate Republic Day with flag hoisting and cultural programme on 26th Jan.",                 date: "2026-01-05", category: "Holiday" },
@@ -35,18 +28,18 @@ const seed: Announcement[] = [
 const emptyForm = { title: "", body: "", titleHi: "", bodyHi: "", date: "", category: "General", attachment: "", attachmentName: "" };
 
 const AdminAnnouncements = () => {
-  const [items, setItems]         = useState<Announcement[]>(seed);
-  const [modal, setModal]         = useState<"add" | "edit" | null>(null);
-  const [editing, setEditing]     = useState<Announcement | null>(null);
+  const [items, setItems]         = useState(seed);
+  const [modal, setModal]         = useState(null);
+  const [editing, setEditing]     = useState(null);
   const [form, setForm]           = useState(emptyForm);
-  const [deleteId, setDeleteId]   = useState<number | null>(null);
+  const [deleteId, setDeleteId]   = useState(null);
   const [search, setSearch]       = useState("");
   const [filterCat, setFilterCat] = useState("All");
   const [translating, setTranslating] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef(null);
 
   const openAdd = () => { setEditing(null); setForm(emptyForm); setModal("add"); };
-  const openEdit = (a: Announcement) => {
+  const openEdit = (a) => {
     setEditing(a);
     setForm({ title: a.title, body: a.body, titleHi: a.titleHi ?? "", bodyHi: a.bodyHi ?? "", date: a.date, category: a.category, attachment: a.attachment ?? "", attachmentName: a.attachmentName ?? "" });
     setModal("edit");
@@ -60,7 +53,7 @@ const AdminAnnouncements = () => {
     setTranslating(false);
   };
 
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     // create object URL for local preview/download
@@ -232,7 +225,8 @@ const AdminAnnouncements = () => {
                         className="w-full rounded-lg border border-violet-200 bg-white px-3 py-2 text-sm font-sanskrit resize-none focus:outline-none focus:border-violet-400" />
                     </div>
                   </div>
-                )}                <div className="space-y-1.5 max-w-xs">
+                )}
+                <div className="space-y-1.5 max-w-xs">
                   <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Date</Label>
                   <Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} className="border-gold/25 focus:border-primary/50" />
                 </div>

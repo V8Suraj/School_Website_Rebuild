@@ -1,3 +1,5 @@
+ 
+
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
@@ -15,13 +17,22 @@ const NotFound = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-temple px-4">
       {/* Background decoration */}
-      <div className="absolute inset-0 opacity-[0.04]"
-        style={{ backgroundImage: "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)", backgroundSize: "28px 28px" }} />
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "radial-gradient(hsl(22 88% 45%) 1.5px, transparent 1.5px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-festive" />
 
       {/* Floating mandalas */}
       <MandalaBg className="absolute -left-32 -top-32 w-80 h-80 opacity-[0.08]" />
-      <MandalaBg className="absolute -right-32 -bottom-32 w-80 h-80 opacity-[0.06]" spin={false} />
+      <MandalaBg
+        className="absolute -right-32 -bottom-32 w-80 h-80 opacity-[0.06]"
+        spin={false}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -75,7 +86,12 @@ const NotFound = () => {
               <Home className="h-4 w-4" /> Back to Home
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="gap-2 border-gold/40 hover:border-gold/70">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="gap-2 border-gold/40 hover:border-gold/70"
+          >
             <Link to="/admissions">
               <BookOpen className="h-4 w-4" /> Admissions
             </Link>
@@ -85,13 +101,16 @@ const NotFound = () => {
         {/* Quick links */}
         <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
           {[
-            { to: "/about",      label: "About Us" },
-            { to: "/academics",  label: "Academics" },
-            { to: "/calendar",   label: "Calendar" },
-            { to: "/contact",    label: "Contact" },
+            { to: "/about", label: "About Us" },
+            { to: "/academics", label: "Academics" },
+            { to: "/calendar", label: "Calendar" },
+            { to: "/contact", label: "Contact" },
           ].map(({ to, label }) => (
-            <Link key={to} to={to}
-              className="hover:text-primary transition-colors flex items-center gap-1">
+            <Link
+              key={to}
+              to={to}
+              className="hover:text-primary transition-colors flex items-center gap-1"
+            >
               <ArrowLeft className="h-3 w-3" /> {label}
             </Link>
           ))}
