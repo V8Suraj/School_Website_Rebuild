@@ -1,20 +1,26 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+
 import { Layout } from "./components/Layout";
-import { AdminLayout } from "./components/admin/AdminLayout"; 
+import { AdminLayout } from "./components/admin/AdminLayout";
+
+// Main Pages
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Academics from "./pages/Academics";
 import Admissions from "./pages/Admissions";
 import Calendar from "./pages/Calendar";
 import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
 import Notices from "./pages/Notices";
 import Fees from "./pages/Fees";
+import NotFound from "./pages/NotFound";
+
+// Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminRegister from "./pages/admin/Register";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -27,30 +33,8 @@ import AdminInquiries from "./pages/admin/Inquiries";
 import AdminNotices from "./pages/admin/Notices";
 import AdminFees from "./pages/admin/Fees";
 import AdminGallery from "./pages/admin/Gallery";
-import AdminCircular from "./pages/admin/Circular"; 
-import Index from "./pages/Index.jsx";
-import About from "./pages/About.jsx";
-import Academics from "./pages/Academics.jsx";
-import Admissions from "./pages/Admissions.jsx";
-import Calendar from "./pages/Calendar.jsx";
-import Contact from "./pages/Contact.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import Notices from "./pages/Notices.jsx";
-import Fees from "./pages/Fees.jsx";
-import AdminLogin from "./pages/admin/Login.tsx";
-import AdminRegister from "./pages/admin/Register.tsx";
-import AdminDashboard from "./pages/admin/Dashboard.tsx";
-import AdminAnnouncements from "./pages/admin/Announcements.tsx";
-import AdminCalendarEvents from "./pages/admin/CalendarEvents.tsx";
-import AdminAbout from "./pages/admin/About.tsx";
-import AdminAcademics from "./pages/admin/Academics.tsx";
-import AdminAdmissions from "./pages/admin/Admissions.tsx";
-import AdminInquiries from "./pages/admin/Inquiries.tsx";
-import AdminNotices from "./pages/admin/Notices.tsx";
-import AdminFees from "./pages/admin/Fees.tsx";
+import AdminCircular from "./pages/admin/Circular";
 
-import AdminGallery from "./pages/admin/Gallery.tsx";
-import AdminCircular from "./pages/admin/Circular.tsx"; 
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -59,8 +43,11 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+
         <BrowserRouter>
           <Routes>
+
+            {/* Main Website */}
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
@@ -71,13 +58,22 @@ const App = () => (
               <Route path="/notices" element={<Notices />} />
               <Route path="/fees" element={<Fees />} />
             </Route>
-            {/* Admin */}
+
+            {/* Admin Auth */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
+
+            {/* Admin Panel */}
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/announcements" element={<AdminAnnouncements />} />
-              <Route path="/admin/calendar" element={<AdminCalendarEvents />} />
+              <Route
+                path="/admin/announcements"
+                element={<AdminAnnouncements />}
+              />
+              <Route
+                path="/admin/calendar"
+                element={<AdminCalendarEvents />}
+              />
               <Route path="/admin/about" element={<AdminAbout />} />
               <Route path="/admin/academics" element={<AdminAcademics />} />
               <Route path="/admin/admissions" element={<AdminAdmissions />} />
@@ -87,7 +83,10 @@ const App = () => (
               <Route path="/admin/gallery" element={<AdminGallery />} />
               <Route path="/admin/circular" element={<AdminCircular />} />
             </Route>
+
+            {/* 404 */}
             <Route path="*" element={<NotFound />} />
+
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

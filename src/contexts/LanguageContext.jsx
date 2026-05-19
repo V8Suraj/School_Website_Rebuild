@@ -1,171 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-export type Language = "en" | "hi";
-
 // ─── all translation keys ──────────────────────────────────────────────────────
-type TranslationKey =
-  // nav
-  | "nav.home" | "nav.about" | "nav.academics" | "nav.admissions"
-  | "nav.calendar" | "nav.notices" | "nav.fees" | "nav.contact"
-  | "nav.applyNow" | "lang.english" | "lang.hindi"
-  // hero
-  | "home.heroTitle" | "home.heroSubtitle" | "home.beginJourney" | "home.discoverUs"
-  // features section
-  | "home.features.title" | "home.features.sub"
-  | "home.feat1.title" | "home.feat1.desc"
-  | "home.feat2.title" | "home.feat2.desc"
-  | "home.feat3.title" | "home.feat3.desc"
-  | "home.feat4.title" | "home.feat4.desc"
-  // stats
-  | "home.stat1.label" | "home.stat2.label" | "home.stat3.label" | "home.stat4.label"
-  // quick links section
-  | "home.quicklinks.title" | "home.quicklinks.sub"
-  | "home.ql1.label" | "home.ql1.sub"
-  | "home.ql2.label" | "home.ql2.sub"
-  | "home.ql3.label" | "home.ql3.sub"
-  | "home.ql4.label" | "home.ql4.sub"
-  // announcements section
-  | "home.announcements.title" | "home.announcements.sub" | "home.announcements.viewAll"
-  | "home.announcements.latest"
-  // testimonials section
-  | "home.testimonials.title" | "home.testimonials.sub"
-  | "home.test1.name" | "home.test1.role" | "home.test1.text"
-  | "home.test2.name" | "home.test2.role" | "home.test2.text"
-  | "home.test3.name" | "home.test3.role" | "home.test3.text"
-  // cta section
-  | "home.cta.title" | "home.cta.sub" | "home.cta.apply" | "home.cta.contact"
-  // events section
-  | "home.events.title" | "home.events.sub" | "home.events.viewAll"
-  // features extra
-  | "home.features.eyebrow" | "home.features.schoolLife"
-  // cultural
-  | "home.cultural.quote"
-  // gallery section
-  | "home.gallery.title" | "home.gallery.sub"
-  | "home.gallery.l1" | "home.gallery.l2" | "home.gallery.l3"
-  | "home.gallery.l4" | "home.gallery.l5" | "home.gallery.l6" | "home.gallery.l7"
-  // calendar page
-  | "cal.heroTitle" | "cal.heroSubtitle"
-  | "cal.sectionTitle" | "cal.sectionSub"
-  | "cal.filterAll" | "cal.filterExam" | "cal.filterResult" | "cal.filterHoliday"
-  | "cal.filterMeeting" | "cal.filterEvent" | "cal.filterLeave"
-  | "cal.until" | "cal.noEvents"
-  | "cal.cta.title" | "cal.cta.sub"
-  // notices page
-  | "notices.heroTitle" | "notices.heroSubtitle"
-  | "notices.sectionTitle" | "notices.sectionSub"
-  | "notices.filterAll" | "notices.filterSchool" | "notices.filterGovt" | "notices.filterUrgent"
-  | "notices.download" | "notices.noNotices"
-  // footer
-  | "footer.tagline" | "footer.quicklinks" | "footer.visit" | "footer.copyright" | "footer.blessing"
-  // about page
-  | "about.heroTitle" | "about.heroSanskrit" | "about.heroSubtitle"
-  | "about.mvv.eyebrow" | "about.mvv.title" | "about.mvv.subtitle"
-  | "about.mission.title" | "about.mission.desc" | "about.mission.footer"
-  | "about.vision.title" | "about.vision.desc" | "about.vision.footer"
-  | "about.values.title" | "about.values.desc" | "about.values.footer"
-  | "about.timeline.eyebrow" | "about.timeline.title" | "about.timeline.subtitle"
-  | "about.timeline.2005.title" | "about.timeline.2005.desc"
-  | "about.timeline.2012.title" | "about.timeline.2012.desc"
-  | "about.timeline.2018.title" | "about.timeline.2018.desc"
-  | "about.timeline.2023.title" | "about.timeline.2023.desc"
-  | "about.achievements.eyebrow" | "about.achievements.title" | "about.achievements.subtitle"
-  | "about.achievement1.title" | "about.achievement1.desc"
-  | "about.achievement2.title" | "about.achievement2.desc"
-  | "about.achievement3.title" | "about.achievement3.desc"
-  | "about.achievement4.title" | "about.achievement4.desc"
-  | "about.facilities.eyebrow" | "about.facilities.title" | "about.facilities.subtitle"
-  | "about.facility1.title" | "about.facility1.desc"
-  | "about.facility2.title" | "about.facility2.desc"
-  | "about.facility3.title" | "about.facility3.desc"
-  | "about.facility4.title" | "about.facility4.desc"
-  | "about.facility5.title" | "about.facility5.desc"
-  | "about.facility6.title" | "about.facility6.desc"
-  | "about.principal.quote" | "about.principal.name" | "about.principal.role"
-  | "about.team.eyebrow" | "about.team.title" | "about.team.subtitle"
-  | "about.team1.name" | "about.team1.role" | "about.team1.expertise"
-  | "about.team2.name" | "about.team2.role" | "about.team2.expertise"
-  | "about.team3.name" | "about.team3.role" | "about.team3.expertise"
-  | "about.team4.name" | "about.team4.role" | "about.team4.expertise"
-  | "about.team5.name" | "about.team5.role" | "about.team5.expertise"
-  | "about.team6.name" | "about.team6.role" | "about.team6.expertise"
-  // ── Academics ──────────────────────────────────────────────────────────────
-  | "academics.heroTitle" | "academics.heroSubtitle"
-  | "academics.statsPassRate" | "academics.statsUniversity" | "academics.statsExperts" | "academics.statsOlympiad"
-  | "academics.pillarsEyebrow" | "academics.pillarsTitle" | "academics.pillarsSubtitle"
-  | "academics.pillar1Title" | "academics.pillar1Desc" | "academics.pillar2Title" | "academics.pillar2Desc"
-  | "academics.pillar3Title" | "academics.pillar3Desc" | "academics.pillar4Title" | "academics.pillar4Desc"
-  | "academics.programsEyebrow" | "academics.programsTitle" | "academics.programsSubtitle"
-  | "academics.prog1Level" | "academics.prog1Grades" | "academics.prog1Desc"
-  | "academics.prog1h1" | "academics.prog1h2" | "academics.prog1h3" | "academics.prog1h4"
-  | "academics.prog2Level" | "academics.prog2Grades" | "academics.prog2Desc"
-  | "academics.prog2h1" | "academics.prog2h2" | "academics.prog2h3" | "academics.prog2h4"
-  | "academics.prog3Level" | "academics.prog3Grades" | "academics.prog3Desc"
-  | "academics.prog3h1" | "academics.prog3h2" | "academics.prog3h3" | "academics.prog3h4"
-  | "academics.prog4Level" | "academics.prog4Grades" | "academics.prog4Desc"
-  | "academics.prog4h1" | "academics.prog4h2" | "academics.prog4h3" | "academics.prog4h4"
-  | "academics.cbseAffiliated" | "academics.keyHighlights"
-  | "academics.subjectsEyebrow" | "academics.subjectsTitle" | "academics.subjectsSubtitle"
-  | "academics.subj1Name" | "academics.subj1Desc" | "academics.subj2Name" | "academics.subj2Desc"
-  | "academics.subj3Name" | "academics.subj3Desc" | "academics.subj4Name" | "academics.subj4Desc"
-  | "academics.subj5Name" | "academics.subj5Desc" | "academics.subj6Name" | "academics.subj6Desc"
-  | "academics.subj7Name" | "academics.subj7Desc" | "academics.subj8Name" | "academics.subj8Desc"
-  | "academics.quoteTrans"
-  | "academics.ctaBadge" | "academics.ctaTitle" | "academics.ctaSubtitle" | "academics.ctaApply" | "academics.ctaContact"
-  // ── Admissions ─────────────────────────────────────────────────────────────
-  | "admissions.heroTitle" | "admissions.heroSubtitle"
-  | "admissions.stepsEyebrow" | "admissions.stepsTitle" | "admissions.stepsSubtitle"
-  | "admissions.step1Title" | "admissions.step1Desc" | "admissions.step2Title" | "admissions.step2Desc"
-  | "admissions.step3Title" | "admissions.step3Desc" | "admissions.step4Title" | "admissions.step4Desc"
-  | "admissions.whyEyebrow" | "admissions.whyTitle" | "admissions.whySubtitle"
-  | "admissions.why1Title" | "admissions.why1Desc" | "admissions.why1StatLabel"
-  | "admissions.why2Title" | "admissions.why2Desc" | "admissions.why2StatLabel"
-  | "admissions.why3Title" | "admissions.why3Desc" | "admissions.why3StatLabel"
-  | "admissions.why4Title" | "admissions.why4Desc" | "admissions.why4StatLabel"
-  | "admissions.docsLabel" | "admissions.docsTitle"
-  | "admissions.doc1" | "admissions.doc2" | "admissions.doc3"
-  | "admissions.doc4" | "admissions.doc5" | "admissions.doc6"
-  | "admissions.contactTitle"
-  | "admissions.formTitle" | "admissions.formSubtitle"
-  | "admissions.formParent" | "admissions.formParentPlaceholder"
-  | "admissions.formChild" | "admissions.formChildPlaceholder"
-  | "admissions.formEmail" | "admissions.formEmailPlaceholder" | "admissions.formEmailError"
-  | "admissions.formPhone" | "admissions.formPhonePlaceholder" | "admissions.formPhoneError"
-  | "admissions.formGrade" | "admissions.formGradePlaceholder"
-  | "admissions.formMessage" | "admissions.formMessagePlaceholder" | "admissions.formMessageOptional"
-  | "admissions.formSubmit" | "admissions.formSubmitting"
-  | "admissions.successTitle" | "admissions.successDesc" | "admissions.successBtn"
-  | "admissions.faqEyebrow" | "admissions.faqTitle" | "admissions.faqSubtitle"
-  | "admissions.faq1Q" | "admissions.faq1A" | "admissions.faq2Q" | "admissions.faq2A"
-  | "admissions.faq3Q" | "admissions.faq3A" | "admissions.faq4Q" | "admissions.faq4A"
-  | "admissions.faq5Q" | "admissions.faq5A" | "admissions.faq6Q" | "admissions.faq6A"
-  | "admissions.faq7Q" | "admissions.faq7A"
-  | "admissions.ctaTitle" | "admissions.ctaSubtitle" | "admissions.ctaVisit" | "admissions.ctaCall"
-  // contact page
-  | "contact.heroTitle" | "contact.heroSubtitle"
-  | "contact.eyebrow" | "contact.reachUs"
-  | "contact.mainCampus" | "contact.callUs" | "contact.email" | "contact.officeHours"
-  | "contact.formTitle" | "contact.formSubtitle"
-  | "contact.name" | "contact.emailLabel" | "contact.subject" | "contact.message"
-  | "contact.send" | "contact.toastSuccess"
-  | "contact.campusTag" | "contact.campusTitle" | "contact.campusAddress"
-  | "contact.campusNear" | "contact.campusDirections"
-  | "contact.subjectGeneral" | "contact.subjectAdmissions" | "contact.subjectFees"
-  | "contact.subjectAcademic" | "contact.subjectScholarships" | "contact.subjectVisit"
-  | "contact.subjectPTM" | "contact.subjectComplaint" | "contact.subjectOther"
-  | "contact.selectSubject"
-  // fees page
-  | "fees.heroTitle" | "fees.heroSubtitle"
-  | "fees.eyebrow" | "fees.sectionTitle" | "fees.sectionSubtitle"
-  | "fees.colClass" | "fees.colTuition" | "fees.colAdmission" | "fees.colExam" | "fees.colOther" | "fees.colTotal"
-  | "fees.note"
-  | "fees.paymentTitle"
-  | "fees.pay1" | "fees.pay2" | "fees.pay3" | "fees.pay4"
-  | "fees.scholarshipTitle" | "fees.scholarshipDesc" | "fees.scholarshipCta"
-  | "fees.class1" | "fees.class2" | "fees.class3" | "fees.class4" | "fees.class5";
 
 // ─── translations ──────────────────────────────────────────────────────────────
-const messages: Record<Language, Record<TranslationKey, string>> = {
+const messages = {
   en: {
     // nav
     "nav.home": "Home",
@@ -760,28 +598,23 @@ const messages: Record<Language, Record<TranslationKey, string>> = {
     "fees.class1": "कक्षा I – II", "fees.class2": "कक्षा III – V", "fees.class3": "कक्षा VI – VIII", "fees.class4": "कक्षा IX – X", "fees.class5": "कक्षा XI – XII",
   },
 };
-interface LanguageContextValue {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  t: (key: TranslationKey) => string;
-}
 
-const LanguageContext = createContext<LanguageContextValue | null>(null);
+const LanguageContext = createContext(null);
 
-export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>("en");
+export const LanguageProvider = ({ children }) => {
+  const [language, setLanguageState] = useState("en");
 
   useEffect(() => {
     const stored = localStorage.getItem("vidyalaya-language");
     if (stored === "en" || stored === "hi") setLanguageState(stored);
   }, []);
 
-  const setLanguage = (next: Language) => {
+  const setLanguage = (next) => {
     setLanguageState(next);
     localStorage.setItem("vidyalaya-language", next);
   };
 
-  const value = useMemo<LanguageContextValue>(
+  const value = useMemo(
     () => ({ language, setLanguage, t: (key) => messages[language][key] }),
     [language],
   );
