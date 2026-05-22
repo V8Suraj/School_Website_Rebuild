@@ -15,7 +15,8 @@ export const PageHero = ({
   size = "default", 
   children,
   preloaderBgImage,
-  horseImage
+  horseImage,
+  showStaticHorse = false // REMOVED - no longer used
 }) => {
   const { language } = useLanguage();
   const isHindi = language === "hi";
@@ -75,11 +76,6 @@ export const PageHero = ({
     }
   };
 
-  // Horse image size for responsive
-  const getHorseSize = () => {
-    return "max-w-[150px] sm:max-w-[200px] md:max-w-[250px] lg:max-w-[300px]";
-  };
-
   return (
     <section className={`relative w-full overflow-hidden bg-gradient-temple flex items-center ${getSectionHeight()}`}>
       
@@ -105,13 +101,13 @@ export const PageHero = ({
                 <img
                   src={horseImage}
                   alt="Horse"
-                  className={`h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[80vh] w-auto object-contain ${getHorseSize()}`}
+                  className="h-auto max-h-[60vh] sm:max-h-[70vh] md:max-h-[80vh] w-auto object-contain max-w-[150px] sm:max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
                 />
               </div>
             </div>
           </>
         ) : (
-          /* Main content background */
+          /* Main content background */ 
           <>
             {video ? (
               /* Video background — plays only first 6 seconds then loops */
@@ -174,6 +170,8 @@ export const PageHero = ({
         )}
       </div>
 
+      {/* REMOVED: Static Horse Image section completely */}
+
       {/* Content - Only show when main content is ready */}
       {showMainContent && (
         <div className={`container-narrow relative w-full z-10 ${getPadding()} ${align === "center" ? "text-center" : ""}`}>
@@ -189,19 +187,21 @@ export const PageHero = ({
                 : "max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl"
             }`}
           >
+            {/* SANSKRIT TEXT - MADE DARKER */}
             {sanskrit && (
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                className={`font-sanskrit ${getSanskritSize()} tracking-wide text-gold mb-2 sm:mb-3 md:mb-4 drop-shadow-[0_2px_8px_hsl(20_40%_12%/0.6)] break-words`}
+                className={`font-sanskrit ${getSanskritSize()} tracking-wide text-amber-600 mb-2 sm:mb-3 md:mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] break-words`}
               >
                 {sanskrit}
               </motion.div>
             )}
 
+            {/* TITLE - MADE DARKER */}
             <h1
-              className={`font-bold drop-shadow-[0_10px_24px_hsl(20_40%_12%/0.62)] ${
+              className={`font-bold drop-shadow-[0_10px_24px_rgba(0,0,0,0.9)] ${
                 isHindi ? "font-sanskrit" : "font-display"
               } ${getTitleSize()} break-words`}
               style={{ lineHeight: isHindi ? 1.4 : 1.2 }}
@@ -209,7 +209,7 @@ export const PageHero = ({
               {isHindi ? (
                 <span
                   style={{
-                    background: "linear-gradient(90deg, hsl(43 95% 86%) 0%, hsl(38 90% 68%) 28%, hsl(22 88% 58%) 55%, hsl(43 95% 86%) 100%)",
+                    background: "linear-gradient(90deg, #d4a017 0%, #c47a1a 28%, #b86b1a 55%, #d4a017 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -224,7 +224,7 @@ export const PageHero = ({
                 <span
                   className="bg-clip-text text-transparent inline-block pb-1"
                   style={{
-                    backgroundImage: "linear-gradient(90deg, hsl(43 95% 86%) 0%, hsl(38 90% 68%) 28%, hsl(22 88% 58%) 55%, hsl(43 95% 86%) 100%)",
+                    backgroundImage: "linear-gradient(90deg, #d4a017 0%, #c47a1a 28%, #b86b1a 55%, #d4a017 100%)",
                   }}
                 >
                   {title}
@@ -232,7 +232,7 @@ export const PageHero = ({
               )}
             </h1>
 
-            {/* Animated divider - responsive sizing */}
+            {/* Animated divider */}
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
@@ -244,12 +244,13 @@ export const PageHero = ({
               <span className="h-px w-8 sm:w-10 md:w-12 bg-gradient-to-l from-transparent to-gold" />
             </motion.div>
 
+            {/* SUBTITLE - MADE DARKER */}
             {subtitle && (
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.7 }}
-                className={`font-display text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.9)] tracking-wide ${
+                className={`font-display text-amber-200 drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] tracking-wide ${
                   size === "compact"
                     ? `${isHindi ? "mt-1 sm:mt-2 font-sanskrit" : "mt-2 sm:mt-3"} ${getSubtitleSize()}`
                     : `${isHindi ? "mt-2 sm:mt-3 font-sanskrit" : "mt-3 sm:mt-4 md:mt-5"} ${getSubtitleSize()} font-medium`
@@ -274,4 +275,4 @@ export const PageHero = ({
       )}
     </section>
   );
-}; 
+};

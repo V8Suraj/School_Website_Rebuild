@@ -10,7 +10,9 @@ import {
   BookOpen, FlaskConical, Palette, Trophy, Award, Sparkles, ArrowRight,
   Megaphone, FileText, Wallet, CalendarDays, Star, ChevronRight, Users,
 } from "lucide-react";
-import heroHome from "@/assets/hero-home.jpg";
+// import heroHome from "@/assets/hero-home.jpg";
+import homeherobg from "../assets/homeherobg.png"
+import horse from "../assets/horse.png"
 import heroVideo from "@/assets/herosection.mp4";
 import heroHomeMobile from "@/assets/mobilevertficateimage.png";
 import heroAbout from "@/assets/aboutus.png";
@@ -93,27 +95,43 @@ const Index = () => {
   return (
     <>
       {/* ── Hero ── */}
-      <PageHero
-        title={t("home.heroTitle")}
-        sanskrit="॥ विद्यया अमृतमश्नुते ॥"
-        subtitle={t("home.heroSubtitle")}
-        image={heroHome}
-        video={heroVideo}
-        mobileImage={heroHomeMobile}
-        imageFit="cover"
-        imagePosition="center center"
-        size="full"
-      >
-        <Button asChild variant="hero" size="xl">
-          <Link to="/admissions">
-            {t("home.beginJourney")}
-            <ArrowRight className={`h-5 w-5 ${language === "hi" ? "hidden" : ""}`} />
-          </Link>
-        </Button>
-        <Button asChild variant="hero" size="xl" className="opacity-90 hover:opacity-100">
-          <Link to="/about">{t("home.discoverUs")}</Link>
-        </Button>
-      </PageHero>
+{/* ── Hero ── */}
+<PageHero
+  title={t("home.heroTitle")}
+  sanskrit="॥ विद्यया अमृतमश्नुते ॥"
+  subtitle={t("home.heroSubtitle")}
+  image={homeherobg}
+  mobileImage={heroHomeMobile}
+  imageFit="cover"
+  imagePosition="center center"
+  size="full"
+  className="relative"
+>
+  {/* Horse image - behind everything with transparency */}
+  <div className="absolute inset-0 pointer-events-none z-0 hidden md:block">
+    <img
+      src={horse}
+      alt="Horse"
+      className="absolute left-[5%] bottom-[34%] w-[48vw] max-w-[820px] min-w-[360px] object-contain opacity-40"
+    />
+  </div>
+  
+  {/* Stronger overlay to darken the horse area and improve text contrast */}
+  <div className="absolute inset-0 pointer-events-none z-[5] bg-gradient-to-r from-black/70 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/60 md:via-black/30 md:to-transparent" />
+  
+  {/* Buttons */}
+  <div className="relative z-10 flex flex-wrap justify-center gap-4">
+    <Button asChild variant="hero" size="xl">
+      <Link to="/admissions">
+        {t("home.beginJourney")}
+        <ArrowRight className={`h-5 w-5 ${language === "hi" ? "hidden" : ""}`} />
+      </Link>
+    </Button>
+    <Button asChild variant="hero" size="xl" className="opacity-90 hover:opacity-100">
+      <Link to="/about">{t("home.discoverUs")}</Link>
+    </Button>
+  </div>
+</PageHero>
 
       {/* ── Stats ── */}
       <section className="container-narrow mt-10 md:mt-14 relative z-10">
