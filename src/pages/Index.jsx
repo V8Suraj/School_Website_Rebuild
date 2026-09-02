@@ -93,8 +93,7 @@ const Index = () => {
   const { language, t } = useLanguage();
 
   return (
-    <>
-      {/* ── Hero ── */}
+    <> 
 {/* ── Hero ── */}
 <PageHero
   title={t("home.heroTitle")}

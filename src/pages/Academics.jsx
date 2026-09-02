@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import heroAcademics from "@/assets/acdemics.png";
 
-/* ─── Static colour/icon config (language-independent) ─── */
+/* ─── Static colour/icon config (language-independent)  ─ */
 
 const statsMeta = [
   { key: "statsPassRate", value: 98, icon: Star, color: "from-amber-500 to-orange-500" },
